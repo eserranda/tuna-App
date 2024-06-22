@@ -11,6 +11,7 @@ class Receiving extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ilc',
         'id_supplier',
         'no_plat',
         'tanggal',

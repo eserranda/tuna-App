@@ -47,6 +47,11 @@
                      </a>
                  </li>
 
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/cutting">
+                         <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
+                     </a>
+                 </li>
                  {{-- <li class="nav-item">
                      <a class="nav-link menu-link" href="#receiving" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="receiving">
@@ -64,8 +69,9 @@
                          </ul>
                      </div>
                  </li> --}}
+
                  {{--  cutting --}}
-                 <li class="nav-item">
+                 {{-- <li class="nav-item">
                      <a class="nav-link menu-link" href="#cutting" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="cutting">
                          <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
@@ -81,7 +87,7 @@
                              </li>
                          </ul>
                      </div>
-                 </li>
+                 </li> --}}
 
                  {{-- retouching --}}
                  <li class="nav-item">

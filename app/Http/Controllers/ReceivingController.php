@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use App\Models\Receiving;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class ReceivingController extends Controller
 {
@@ -15,9 +19,33 @@ class ReceivingController extends Controller
         return view('receiving.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getAll(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Receiving::latest('created_at')->get();
+            // $data->transform(function ($item) {
+            //     $item->tanggal = Carbon::parse($item->tanggal)->format('d-m-Y');
+            //     return $item;
+            // });
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn .= ' <a href="/raw-material-lots/grading/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    // function grading($ilc)
+    // {
+    //     return view('receiving.grading', compact('ilc'));
+    // }
+
+
     public function create()
     {
         //
@@ -25,20 +53,53 @@ class ReceivingController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $ilc = null;
+        if ($request->id_supplier != null) {
+            $supplier = Supplier::find($request->id_supplier);
+            $now = Carbon::now();
+            $year = $now->format('Y');
+            $julian_day = $now->format('z') + 1;
+            $month = $now->format('m');
+            $julian_date = $year . $julian_day . $month;
+
+            $ilc = $supplier->kode_batch . $julian_date . $supplier->kode_supplier;
+        }
+        $request->merge(['ilc' => $ilc]);
+
+        $validator = Validator::make($request->all(), [
+            'ilc' => 'required|unique:receivings',
             'id_supplier' => 'required|exists:suppliers,id',
             'no_plat' => 'required|string|max:255',
             'tanggal' => 'required|date',
+        ], [
+            'ilc.unique' => 'ILC Sudah Ada',
+            'ilc.required' => 'Kode ILC gagal di generate',
+            'id_supplier.required' => 'Supplier Wajib Diisi',
+            'id_supplier.exists' => 'Supplier Tidak Valid',
+            'no_plat.required' => 'Nomor Plat Wajib Diisi',
+            'tanggal.required' => 'Tanggal Wajib Diisi',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         Receiving::create([
+            'ilc' => $ilc,
             'id_supplier' => $request->id_supplier,
             'no_plat' => $request->no_plat,
             'tanggal' => $request->tanggal,
         ]);
 
-        return redirect()->route('receiving.index')->with('success', 'Receiving created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Receiving created successfully.'
+        ], 201);
     }
+
 
     /**
      * Display the specified resource.
@@ -67,8 +128,15 @@ class ReceivingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Receiving $receiving)
+    public function destroy(Receiving $receiving, $id)
     {
-        //
+        try {
+            $del_receiving = $receiving::findOrFail($id);
+            $del_receiving->delete();
+
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }
