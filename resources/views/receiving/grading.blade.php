@@ -64,7 +64,9 @@
                                         Tanggal : <span class="fw-bold"> {{ $data->tanggal }}</span>
                                     </div>
                                     <div class="col-sm-6">
-                                        Supplier : <span class="fw-bold">{{ $data->supplier->nama_supplier }}</span>
+                                        {{-- Supplier : <span class="fw-bold">{{ $data->supplier->nama_supplier }}</span> --}}
+                                        Supplier : <span class="fw-bold">{{ $data->supplier->nama_supplier ?? '-' }}</span>
+
                                     </div>
                                     <div class="col-sm-6">
                                         No Plat : <span class="fw-bold">{{ $data->no_plat }}</span>
@@ -211,6 +213,36 @@
                 dom: 'Bftp',
                 // dom: 'Bftip',
             });
+        });
+        var ilc = "{{ $data->ilc }}";
+        document.addEventListener('DOMContentLoaded', function() {
+            const autoNumberStatus = localStorage.getItem('auto_number') || 'on';
+            const autoNumberSwitch = document.getElementById('auto_number_receiving');
+
+            if (autoNumberStatus === 'on') {
+                autoNumberSwitch.checked = true;
+                nextNumber(ilc).then(() => {
+                    document.getElementById('no_ikan').readOnly = true;
+                });
+            } else {
+                autoNumberSwitch.checked = false;
+                document.getElementById('no_ikan').readOnly = false;
+            }
+
+            autoNumberSwitch.addEventListener('change', function(event) {
+                const isChecked = event.target.checked;
+                localStorage.setItem('auto_number', isChecked ? 'on' : 'off');
+
+                if (isChecked) {
+                    nextNumber(ilc).then(() => {
+                        document.getElementById('no_ikan').readOnly = true;
+                    });
+                } else {
+                    document.getElementById('no_ikan').readOnly = false;
+                    document.getElementById('no_ikan').value = '';
+                }
+            });
+
 
             document.getElementById('rawMaterialLotsForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
@@ -264,8 +296,15 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        form.reset();
-                        myDataTable.ajax.reload();
+                        // form.reset();
+                        $('.datatable').DataTable().ajax.reload();
+                        const autoNumberStatus = localStorage.getItem('auto_number');
+                        if (autoNumberStatus === 'on') {
+                            nextNumber(ilc);
+                        } else {
+                            autoNumberSwitch.checked = false;
+                            document.getElementById('no_ikan').readOnly = false;
+                        }
                     }
                 } catch (error) {
                     console.error('There has been a problem with your fetch operation:', error);
@@ -273,6 +312,16 @@
             });
         });
 
+        function nextNumber(ilc) {
+            return fetch("/raw-material-lots/nextNumber/" + ilc)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('no_ikan').value = data.next_no_ikan;
+                })
+                .catch(error => {
+                    console.error('Error fetching next no_ikan:', error);
+                });
+        }
 
         async function hapus(id) {
             Swal.fire({

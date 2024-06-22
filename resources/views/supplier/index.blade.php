@@ -9,6 +9,38 @@
     </div>
 @endsection
 
+@push('head_component')
+    <style>
+        .dataTables_filter {
+            width: 100%;
+            text-align: left;
+            /* Memulai dari kiri */
+            display: flex;
+            justify-content: flex-start;
+            /* Memulai dari kiri */
+        }
+
+        .dataTables_filter label {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            /* Memulai dari kiri */
+        }
+
+        .dataTables_filter input {
+            width: auto;
+            flex: 1;
+            /* Menyesuaikan lebar input dengan kontainer */
+        }
+    </style>
+    <!-- Sweet Alert css-->
+    <link href="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <script src="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('assets') }}/js/pages/sweetalerts.init.js"></script>
+    <!--- Datatable -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+@endpush
 @section('content')
     <div class="row">
         <div class="col-xxl-5">
@@ -19,52 +51,22 @@
                         <div class="flex-shrink-0">
                             <a href={{ route('supplier.add') }} class="btn btn-info ">Tambah Supplier</a>
                         </div>
-                    </div><!-- end card header -->
-
+                    </div>
                     <div class="card-body">
-                        <table class="table table-nowrap">
+                        <table class="table dataSupplier">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Action</th>
+                                    <th>No</th>
+                                    <th>Kode Batch</th>
+                                    <th>Kode Supplier</th>
+                                    <th>Nama</th>
+                                    <th>Provinsi</th>
+                                    <th>Kabupaten</th>
+                                    <th>Kelurahan</th>
+                                    <th>Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row"><a href="#" class="fw-semibold">#VZ2110</a></th>
-                                    <td>Bobby Davis</td>
-                                    <td>October 15, 2021</td>
-                                    <td>$2,300</td>
-                                    <td><a href="javascript:void(0);" class="link-success">View More <i
-                                                class="ri-arrow-right-line align-middle"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a href="#" class="fw-semibold">#VZ2109</a></th>
-                                    <td>Christopher Neal</td>
-                                    <td>October 7, 2021</td>
-                                    <td>$5,500</td>
-                                    <td><a href="javascript:void(0);" class="link-success">View More <i
-                                                class="ri-arrow-right-line align-middle"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a href="#" class="fw-semibold">#VZ2108</a></th>
-                                    <td>Monkey Karry</td>
-                                    <td>October 5, 2021</td>
-                                    <td>$2,420</td>
-                                    <td><a href="javascript:void(0);" class="link-success">View More <i
-                                                class="ri-arrow-right-line align-middle"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a href="#" class="fw-semibold">#VZ2107</a></th>
-                                    <td>James White</td>
-                                    <td>October 2, 2021</td>
-                                    <td>$7,452</td>
-                                    <td><a href="javascript:void(0);" class="link-success">View More <i
-                                                class="ri-arrow-right-line align-middle"></i></a></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -74,3 +76,103 @@
     </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            const datatable = $('.dataSupplier').DataTable({
+                processing: true,
+                serverSide: true,
+                language: {
+                    "search": "",
+                    "searchPlaceholder": "Cari Data",
+                },
+                ajax: "{{ route('supplier.getAllData') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'kode_batch',
+                        name: 'kode_batch',
+                    },
+                    {
+                        data: 'kode_supplier',
+                        name: 'kode_supplier',
+                    },
+                    {
+                        data: 'nama_supplier',
+                        name: 'nama_supplier',
+                    },
+                    {
+                        data: 'provinsi',
+                        name: 'provinsi',
+                    },
+                    {
+                        data: 'kabupaten',
+                        name: 'kabupaten',
+                    },
+                    {
+                        data: 'kelurahan',
+                        name: 'kelurahan',
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+
+                ],
+                dom: 'Bftp',
+            });
+        });
+
+        async function hapus(id) {
+            Swal.fire({
+                title: 'Hapus Data?',
+                text: 'Data akan dihapus permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: '/supplier/' + id,
+                        type: 'DELETE',
+                        data: {
+                            _token: csrfToken
+                        },
+                        success: function(response) {
+                            console.log('Response:', response);
+                            if (response.status) {
+                                Swal.fire(
+                                    'Terhapus!',
+                                    'Data berhasil dihapus.',
+                                    'success'
+                                );
+                                $('.dataSupplier').DataTable().ajax.reload();
+                            } else {
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data guru.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus data guru.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+@endpush

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cutting;
+use App\Models\RawMaterialLots;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
@@ -15,6 +18,41 @@ class SupplierController extends Controller
     {
         return view('supplier.index');
     }
+
+    public function nextNumber($no_ikan)
+    {
+        $lastLot = RawMaterialLots::where('no_ikan', $no_ikan)
+            ->orderBy('no_ikan', 'desc')->first();
+
+        if ($lastLot) {
+            $nextNoIkan = $lastLot->no_loin + 1;
+            if ($lastLot->no_loin == 4) {
+                $nextNoIkan = 1;
+            }
+        } else {
+            $nextNoIkan = 1;
+        }
+
+        return response()->json([
+            'next_no_loin' => $nextNoIkan,
+        ]);
+    }
+
+    public function getAllData(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Supplier::latest('created_at')->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
 
     public function get()
     {
@@ -104,8 +142,15 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Supplier $supplier)
+    public function destroy(Supplier $supplier, $id)
     {
-        //
+        try {
+            $del_receiving = $supplier::findOrFail($id);
+            $del_receiving->delete();
+
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }

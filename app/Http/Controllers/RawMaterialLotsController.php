@@ -11,9 +11,26 @@ use Illuminate\Support\Facades\Validator;
 
 class RawMaterialLotsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function getNoIkan($ilc)
+    {
+        $noIkanList = RawMaterialLots::where('ilc', $ilc)
+            ->orderBy('no_ikan', 'asc')
+            ->pluck('no_ikan');
+
+
+        return response()->json($noIkanList);
+    }
+
+    public function nextNumber($ilc)
+    {
+        $lastLot = RawMaterialLots::where('ilc', $ilc)->orderBy('no_ikan', 'desc')->first();
+        $nextNoIkan = $lastLot ? $lastLot->no_ikan + 1 : 1;
+
+        return response()->json([
+            'next_no_ikan' => $nextNoIkan,
+        ]);
+    }
+
     public function index()
     {
         //

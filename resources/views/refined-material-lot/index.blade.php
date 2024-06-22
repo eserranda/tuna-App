@@ -96,54 +96,18 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            {{-- <div class="mb-3">
-                                                <label for="auto_number" class="form-label">Auto Number</label>
-                                                <div>
-                                                    <input type="radio" id="auto_on" name="auto_number" value="on"
-                                                        checked>
-                                                    <label for="auto_on">On</label>
-                                                    <input type="radio" id="auto_off" name="auto_number" value="off">
-                                                    <label for="auto_off">Off</label>
-                                                </div>
-                                            </div> --}}
                                             <div class="mb-3">
                                                 <label for="no_ikan" class="form-label">Nomor Ikan</label>
-                                                <input type="number" class="form-control" placeholder="No Ikan"
-                                                    id="no_ikan" name="no_ikan">
-                                                <div class="invalid-feedback"></div>
-                                                {{-- <span>
-                                                    <div class="form-check form-switch">
-                                                        <input class="form-check-input" type="checkbox" role="switch"
-                                                            id="auto_number_switch">
-                                                        <label class="form-check-label" for="auto_number_switch">Auto
-                                                            Number</label>
-                                                    </div>
-                                                </span> --}}
+                                                <select class="form-select mb-3" id="no_ikan" name="no_ikan">
+                                                </select>
                                             </div>
                                         </div>
-
-                                        {{-- <div class="col-6">
-                                            <div class="mb-3">
-                                                <label for="no_ikan" class="form-label">Nomor Ikan</label>
-                                                <input type="text" class="form-control bg-light" id="no_ikan"
-                                                    name="no_ikan" readonly>
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div> --}}
 
                                         <div class="col-6">
                                             <div class="mb-3">
                                                 <label for="no_loin" class="form-label">Nomor Loin</label>
                                                 <input type="number" class="form-control" placeholder="No Loin"
                                                     id="no_loin" name="no_loin">
-                                                {{-- <select class="form-select mb-3" id="no_loin" name="no_loin">
-                                                    <option selected disabled>Pilih Nomor Loin</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                </select> --}}
                                                 <div class="invalid-feedback">
                                                 </div>
                                                 <span>
@@ -156,6 +120,7 @@
                                                 </span>
                                             </div>
                                         </div>
+
                                         <div class="col-6">
                                             <div class="mb-3">
                                                 <label for="grade" class="form-label">Grade</label>
@@ -217,7 +182,7 @@
                 serverSide: true,
                 language: {
                     "search": "",
-                    "searchPlaceholder": "Cari Data Cutting",
+                    "searchPlaceholder": "Cari Nomor Ikan atau Grade",
                 },
                 ajax: "{{ url('refined-material-lots/getAll') }}/" + ilc_cutting,
                 columns: [{
@@ -228,6 +193,7 @@
                     {
                         data: 'berat',
                         name: 'berat',
+                        searchable: false
                     },
                     {
                         data: 'no_ikan',
@@ -236,6 +202,7 @@
                     {
                         data: 'no_loin',
                         name: 'no_loin',
+                        searchable: false
                     },
                     {
                         data: 'grade',
@@ -253,17 +220,30 @@
 
 
         });
-        const ilc_cutting = "{{ $data->ilc_cutting }}";
 
+        const ilc_cutting = "{{ $data->ilc_cutting }}";
+        const ilc = "{{ $data->ilc }}";
+        const no_ikan = document.getElementById('no_ikan').value;
+
+        var nomorIkan = '';
         document.addEventListener('DOMContentLoaded', function() {
+            populateNoIkan(ilc);
+
             const autoNumberStatus = localStorage.getItem('auto_number') || 'on';
             const autoNumberSwitch = document.getElementById('auto_number_switch');
 
             if (autoNumberStatus === 'on') {
                 autoNumberSwitch.checked = true;
-                nextNumber(ilc_cutting).then(() => {
-                    document.getElementById('no_loin').readOnly = true;
-                });
+                const noIkanSelect = document.getElementById('no_ikan');
+                const noIkanValue = noIkanSelect.value;
+
+                if (!noIkanValue) {
+                    console.log("no ikan belum dipilih");
+                } else {
+                    nextNumber(ilc_cutting, noIkanValue).then(() => {
+                        document.getElementById('no_ikan').readOnly = true;
+                    });
+                }
             } else {
                 autoNumberSwitch.checked = false;
                 document.getElementById('no_loin').readOnly = false;
@@ -274,22 +254,47 @@
                 localStorage.setItem('auto_number', isChecked ? 'on' : 'off');
 
                 if (isChecked) {
-                    nextNumber(ilc_cutting).then(() => {
-                        document.getElementById('no_loin').readOnly = true;
-                    });
+                    const noIkanSelect = document.getElementById('no_ikan');
+                    const noIkanValue = noIkanSelect.value;
+                    if (!noIkanValue) {
+                        console.log("no ikan belum dipilih");
+                    } else {
+                        nextNumber(ilc_cutting, noIkanValue).then(() => {
+                            document.getElementById('no_loin').readOnly = true;
+                        });
+                    }
                 } else {
                     document.getElementById('no_loin').readOnly = false;
                     document.getElementById('no_loin').value = '';
                 }
             });
 
+            document.getElementById('no_ikan').addEventListener('change', function(event) {
+                const noIkanValue = event.target.value;
+                nomorIkan = noIkanValue;
+                if (!noIkanValue) {
+                    console.log("no ikan belum dipilih");
+                    return;
+                }
+
+                if (autoNumberSwitch.checked) {
+                    nextNumber(ilc_cutting, noIkanValue);
+                }
+            });
+
             document.getElementById('refinedMaterialLotsForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                const ilc_cutting = "{{ $data->ilc_cutting }}";
                 const form = event.target;
                 const formData = new FormData(form);
                 formData.append('ilc_cutting', ilc_cutting); // menambahkan ilc ke formData
+
+                const noIkanSelect = document.getElementById('no_ikan');
+                const noIkanValue = noIkanSelect.value;
+                if (!noIkanValue) {
+                    console.log("no ikan belum dipilih");
+                    return;
+                }
 
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 try {
@@ -335,13 +340,13 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        form.reset();
+                        // form.reset();
                         $('.datatable').DataTable().ajax.reload();
                         const autoNumberStatus = localStorage.getItem('auto_number');
                         if (autoNumberStatus === 'on') {
-                            nextNumber(ilc_cutting);
+                            nextNumber(ilc_cutting, noIkanValue);
                         } else {
-                            document.getElementById('auto_off').checked = true;
+                            autoNumberSwitch.checked = false;
                             document.getElementById('no_loin').readOnly = false;
                         }
                     }
@@ -354,20 +359,6 @@
         async function kodeILC(ilc) {
             document.getElementById('ilc').value = ilc;
         }
-
-        function nextNumber(ilc_cutting) {
-            return fetch("/refined-material-lots/nextNumber/" + ilc_cutting)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('no_loin').value = data.next_no_loin;
-                })
-                .catch(error => {
-                    console.error('Error fetching next no_ikan:', error);
-                });
-        }
-
-
-
 
         async function hapus(id) {
             Swal.fire({
@@ -396,12 +387,14 @@
                                     'success'
                                 );
                                 $('.datatable').DataTable().ajax.reload();
-                                const autoNumberStatus = localStorage.getItem('auto_number');
+                                const autoNumberStatus = localStorage.getItem(
+                                    'auto_number');
                                 if (autoNumberStatus === 'on') {
-                                    nextNumber(ilc_cutting);
+                                    nextNumber(ilc_cutting, nomorIkan);
                                 } else {
-                                    document.getElementById('auto_off').checked = true;
+                                    autoNumberSwitch.checked = false;
                                     document.getElementById('no_loin').readOnly = false;
+                                    // document.getElementById('auto_off').checked = true;
                                 }
                             } else {
                                 Swal.fire(
@@ -422,6 +415,36 @@
                     });
                 }
             });
+        }
+
+        function populateNoIkan(ilc) {
+            // alert("ilc: " + ilc);
+            fetch("/raw-material-lots/getNoIkan/" + ilc)
+                .then(response => response.json())
+                .then(data => {
+                    const noIkanSelect = document.getElementById('no_ikan');
+                    noIkanSelect.innerHTML = '<option selected disabled>Pilih Nomor Ikan</option>';
+                    data.forEach(no_ikan => {
+                        const option = document.createElement('option');
+                        option.value = no_ikan;
+                        option.textContent = no_ikan;
+                        noIkanSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching no_ikan:', error);
+                });
+        }
+
+        function nextNumber(ilc_cutting, no_ikan) {
+            return fetch("/refined-material-lots/nextNumber/" + ilc_cutting + "/" + no_ikan)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('no_loin').value = data.next_no_loin;
+                })
+                .catch(error => {
+                    console.error('Error fetching next no_ikan:', error);
+                });
         }
     </script>
 @endpush

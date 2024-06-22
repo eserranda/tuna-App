@@ -90,8 +90,15 @@
                  </li> --}}
 
                  {{-- retouching --}}
+
                  <li class="nav-item">
-                     <a class="nav-link menu-link" href="#retouching" data-bs-toggle="collapse" role="button"
+                     <a class="nav-link menu-link" href="/retouching">
+                         <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Retouching</span>
+                     </a>
+                 </li>
+
+                 {{-- <li class="nav-item">
+                     <a class="nav-link menu-link" href="/retouching" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="retouching">
                          <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Retouching</span>
                      </a>
@@ -106,18 +113,18 @@
                              </li>
                          </ul>
                      </div>
-                 </li>
+                 </li> --}}
 
                  {{-- stuffing --}}
                  <li class="nav-item">
-                     <a class="nav-link menu-link" href="#retouching" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="retouching">
-                         <i class="ri-luggage-cart-fill"></i> <span data-key="t-pages">Retouching</span>
+                     <a class="nav-link menu-link" href="/packing" data-bs-toggle="collapse" role="button"
+                         aria-expanded="false" aria-controls="packing">
+                         <i class="ri-luggage-cart-fill"></i> <span data-key="t-pages">Packing</span>
                      </a>
-                     <div class="collapse menu-dropdown" id="retouching">
+                     <div class="collapse menu-dropdown" id="packing">
                          <ul class="nav nav-sm flex-column">
                              <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-retouching">Cutting</a>
+                                 <a href="pages-starter.html" class="nav-link" data-key="t-packing">Cutting</a>
                              </li>
 
                              <li class="nav-item">

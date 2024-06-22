@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class RefinedMaterialLotsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index($ilc_cutting)
     {
         $data = Cutting::where('ilc_cutting', $ilc_cutting)->first();
@@ -110,10 +107,9 @@ class RefinedMaterialLotsController extends Controller
             ->orderBy('no_loin', 'desc')->first();
 
         if ($lastLot) {
+            $nextNoIkan = $lastLot->no_loin + 1;
             if ($lastLot->no_loin == 4) {
                 $nextNoIkan = 1;
-            } else {
-                $nextNoIkan = $lastLot->no_ikan + 1;
             }
         } else {
             $nextNoIkan = 1;
