@@ -57,7 +57,7 @@ class ReceivingController extends Controller
         if ($request->id_supplier != null) {
             $supplier = Supplier::find($request->id_supplier);
             $now = Carbon::now();
-            $year = $now->format('Y');
+            $year = $now->format('y');
             $julian_day = $now->format('z') + 1;
             $month = $now->format('m');
             $julian_date = $year . $julian_day . $month;

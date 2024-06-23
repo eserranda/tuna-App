@@ -22,7 +22,7 @@ class RetouchingController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = ' <a href="/raw-material-lots/grading/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc . '\')"><i class="ri-arrow-right-line"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

@@ -56,7 +56,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xxl-5">
+        <div class="col-xxl-8">
             <div class="d-flex flex-column h-100">
                 <div class="row mb-0">
                     <div class="col-md-5">
@@ -139,6 +139,10 @@
 
 @push('scripts')
     <script>
+        async function kodeILC(ilc) {
+            document.getElementById('ilc').value = ilc;
+        }
+
         $(document).ready(function() {
             const datatable = $('.datatableCutting').DataTable({
                 processing: true,

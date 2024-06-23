@@ -47,7 +47,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xxl-5">
+        <div class="col-xxl-8">
             <div class="d-flex flex-column h-100">
                 <div class="row">
                     <div class="col-md-6">
@@ -350,6 +350,13 @@
                                     'success'
                                 );
                                 $('.datatable').DataTable().ajax.reload();
+                                const autoNumberStatus = localStorage.getItem('auto_number');
+                                if (autoNumberStatus === 'on') {
+                                    nextNumber(ilc);
+                                } else {
+                                    autoNumberSwitch.checked = false;
+                                    document.getElementById('no_ikan').readOnly = false;
+                                }
                             } else {
                                 Swal.fire(
                                     'Gagal!',
