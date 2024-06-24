@@ -10,8 +10,14 @@ class Cutting extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_supplier',
         'ilc',
         'ilc_cutting',
         'ekspor',
     ];
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'id_supplier');
+    }
 }

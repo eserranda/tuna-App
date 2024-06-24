@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('retouchings', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('ilc');
-            $table->string('ilc_cutting');
-            $table->unsignedBigInteger('id_supplier')->nullable();
-
-
-            $table->date('tanggal');
-            $table->string('customer_grup');
-            $table->decimal('berat', 5, 2);
+            $table->string('nama');
+            $table->string('kode')->nullable();
+            $table->string('customer_group');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('alamat')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('retouchings');
+        Schema::dropIfExists('customers');
     }
 };

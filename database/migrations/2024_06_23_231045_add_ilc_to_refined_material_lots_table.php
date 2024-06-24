@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('receivings', function (Blueprint $table) {
+        Schema::table('refined_material_lots', function (Blueprint $table) {
             $table->unsignedBigInteger('id_supplier')->after('id')->nullable();
+            // Tambahkan foreign key baru
             $table->foreign('id_supplier')->references('id')->on('suppliers')->cascadeOnUpdate()->nullOnDelete();
-            $table->dropColumn('nama');
         });
     }
 
@@ -23,10 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('receivings', function (Blueprint $table) {
-            $table->dropForeign(['id_supplier']);
+        Schema::table('refined_material_lots', function (Blueprint $table) {
             $table->dropColumn('id_supplier');
-            $table->string('nama')->nullable();
         });
     }
 };

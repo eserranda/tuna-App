@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\CuttingController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\RawMaterialLotsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SupplierController;
@@ -24,8 +26,30 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
+Route::prefix('produk')->controller(ProductsController::class)->group(function () {
+    Route::get('/', 'index')->name('produk.index');
+    Route::get('/add', 'add')->name('produk.add');
+    Route::get('/getAllData', 'getAllData')->name('produk.getAllData');
+
+    // Route::get('/add', 'add')->name('customer.add');
+    // Route::post('/store', 'store')->name('customer.store');
+    // Route::delete('/{id}', 'destroy')->name('retouching.destroy');
+});
+
+Route::prefix('customer')->controller(CustomersController::class)->group(function () {
+    Route::get('/', 'index')->name('customer.index');
+    Route::get('/getAllData', 'getAllData')->name('customer.getAllData');
+    Route::get('/add', 'add')->name('customer.add');
+    Route::post('/store', 'store')->name('customer.store');
+    Route::delete('/{id}', 'destroy')->name('retouching.destroy');
+});
+
+
 Route::prefix('retouching')->controller(RetouchingController::class)->group(function () {
     Route::get('/', 'index')->name('retouching.index');
+    Route::get('/getAll', 'getAll')->name('retouching.getAll');
+    Route::post('/', 'store')->name('retouching.store');
+    Route::delete('/{id}', 'destroy')->name('retouching.destroy');
     Route::get('/getAllCutting', 'getAllCutting')->name('retouching.getAllCutting');
 
     // Route::post('/store', 'store')->name('retouching.store');

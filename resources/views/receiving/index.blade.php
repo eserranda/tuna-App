@@ -38,6 +38,7 @@
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('assets') }}/js/pages/datatables.init.js"></script>
 @endpush
 @section('title')
     <h4 class="mb-sm-0">Receiving</h4>

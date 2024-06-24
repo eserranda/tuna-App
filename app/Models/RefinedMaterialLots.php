@@ -9,7 +9,7 @@ class RefinedMaterialLots extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id_cutting',
+        'id_supplier',
         'ilc_cutting',
         'berat',
         'no_ikan',

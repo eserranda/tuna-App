@@ -36,7 +36,7 @@
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label class="form-label">Kode Supplier</label>
-                                        <input type="text"
+                                        <input type="number"
                                             class="form-control {{ $errors->has('kode_supplier') ? 'is-invalid' : '' }}"
                                             placeholder="Kode Supplier" name="kode_supplier" id="kode_supplier"
                                             value="{{ old('kode_supplier') }}">
@@ -63,7 +63,7 @@
                                         <input type="text"
                                             class="form-control {{ $errors->has('provinsi') ? 'is-invalid' : '' }}"
                                             placeholder="Provinsi" name="provinsi" id="provinsi"
-                                            value="{{ old('provinsi') }}">
+                                            value="{{ old('provinsi') }} Sulawesi-Selatan">
                                         @if ($errors->has('provinsi'))
                                             <div class="text-danger">{{ $errors->first('provinsi') }}</div>
                                         @endif

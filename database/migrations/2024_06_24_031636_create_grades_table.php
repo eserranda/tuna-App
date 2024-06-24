@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('retouchings', function (Blueprint $table) {
+        Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->string('ilc');
-            $table->string('ilc_cutting');
-            $table->unsignedBigInteger('id_supplier')->nullable();
-
-
-            $table->date('tanggal');
-            $table->string('customer_grup');
-            $table->decimal('berat', 5, 2);
+            $table->string('nama');
             $table->timestamps();
         });
     }
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('retouchings');
+        Schema::dropIfExists('grades');
     }
 };

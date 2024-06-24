@@ -45,10 +45,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 @endpush
 @section('title')
-    <h4 class="mb-sm-0">Cutting</h4>
+    <h4 class="mb-sm-0">Retouching</h4>
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="javascript: void(0);">Cutting</a></li>
+            <li class="breadcrumb-item"><a href="javascript: void(0);">Retouching</a></li>
             <li class="breadcrumb-item active">data</li>
         </ol>
     </div>
@@ -59,7 +59,7 @@
         <div class="col-xxl-8">
             <div class="d-flex flex-column h-100">
                 <div class="row mb-0">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
@@ -82,7 +82,7 @@
 
                         </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-8">
                         <div class="card mb-2">
                             {{-- <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Data Receiving</h4>
@@ -93,7 +93,15 @@
                                         <div class="col-6">
                                             <label for="berat" class="form-label">ILC Cutting</label>
                                             <input type="text" class="form-control bg-light"
-                                                placeholder="Internal Lot Code" id="ilc" name="ilc" readonly>
+                                                placeholder="Internal Lot Code" id="ilc_cutting" name="ilc_cutting"
+                                                readonly>
+                                            <div class="invalid-feedback">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="berat" class="form-label">Berat</label>
+                                            <input type="number" class="form-control" placeholder="Berat" id="berat"
+                                                name="berat" step="0.01">
                                             <div class="invalid-feedback">
                                             </div>
                                         </div>
@@ -109,10 +117,10 @@
 
                         <div class="card mb-0">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Data Retouching</h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped mt-0 datatable" id="datatable">
+                                <table class="table table-striped mt-0 datatableRetouching" id="datatableRetouching">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -139,9 +147,38 @@
 
 @push('scripts')
     <script>
-        async function kodeILC(ilc) {
-            document.getElementById('ilc').value = ilc;
+        async function kodeILC(ilc_cutting) {
+            document.getElementById('ilc_cutting').value = ilc_cutting;
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('cuttingForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const form = event.target;
+                const formData = new FormData(form);
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                try {
+                    const response = await fetch('{{ route('retouching.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        $('.datatableRetouching').DataTable().ajax.reload();
+                    }
+
+                } catch (error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                }
+            });
+        });
 
         $(document).ready(function() {
             const datatable = $('.datatableCutting').DataTable({
@@ -174,6 +211,98 @@
                 ],
                 dom: 'Bftp',
             });
+
+            const datatableRetouching = $('.datatableRetouching').DataTable({
+                processing: true,
+                serverSide: true,
+                language: {
+                    "search": "",
+                    "searchPlaceholder": "Cari Data Retouching",
+                },
+                ajax: "{{ route('retouching.getAll') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'ilc_cutting',
+                        name: 'ilc_cutting',
+                    },
+                    {
+                        data: 'tanggal',
+                        name: 'tanggal',
+                    },
+                    {
+                        data: 'id_supplier',
+                        name: 'id_supplier',
+                    },
+                    {
+                        data: 'customer_grup',
+                        name: 'customer_grup',
+                    },
+                    {
+                        data: 'berat',
+                        name: 'berat',
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+
+                ],
+                dom: 'Bftp',
+            });
         });
+
+        async function hapus(id) {
+            Swal.fire({
+                title: 'Hapus Data?',
+                text: 'Data akan dihapus permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: '/retouching/' + id,
+                        type: 'DELETE',
+                        data: {
+                            _token: csrfToken
+                        },
+                        success: function(response) {
+                            console.log('Response:', response);
+                            if (response.status) {
+                                Swal.fire(
+                                    'Terhapus!',
+                                    'Data berhasil dihapus.',
+                                    'success'
+                                );
+                                $('.datatableRetouching').DataTable().ajax.reload();
+
+                            } else {
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data guru.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus data guru.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endpush

@@ -23,10 +23,6 @@ class CuttingController extends Controller
         if ($request->ajax()) {
             $data = Cutting::latest('created_at')->get();
 
-            // $data->transform(function ($item) {
-            //     $item->created_at = Carbon::parse($item->created_at)->format('Y-m-d');
-            //     return $item;
-            // });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -84,9 +80,13 @@ class CuttingController extends Controller
             ], 422);
         }
 
+        $supplier =  Receiving::where('ilc', $request->ilc)->first();
+        $id_supplier = $supplier->id_supplier;
+
         $ilc_cutting =  $request->ilc . '1';
 
         Cutting::create([
+            'id_supplier' => $id_supplier,
             'ilc' => $request->ilc,
             'ilc_cutting' => $ilc_cutting,
             'ekspor' => $request->ekspor,

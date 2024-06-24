@@ -149,6 +149,18 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Produk Receiving</h4>
                             </div>
                             <div class="card-body">
+                                <div class="row align-items-start">
+                                    <div class="col-sm-6 mb-1">
+                                        Total Berat :
+                                    </div>
+                                    {{-- <div class="col-sm-6">
+                                        Ekspor :
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        ILC Cutting :
+                                    </div> --}}
+                                </div>
+                                <hr>
                                 <table class="table table-striped mt-0 datatable" id="datatable">
                                     <thead>
                                         <tr>

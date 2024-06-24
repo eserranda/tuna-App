@@ -138,7 +138,19 @@
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/supplier">
-                         <i class="ri-dashboard-2-line"></i> <span data-key="t-supplier">Supplier</span>
+                         <i class="ri-group-line"></i> <span data-key="t-supplier">Supplier</span>
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/customer">
+                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Customer</span>
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/produk">
+                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Produk</span>
                      </a>
                  </li>
 

@@ -65,17 +65,20 @@
                             </div>
                             <div class="card-body">
                                 <div class="row align-items-start">
-                                    <div class="col-sm-6 mb-3">
+                                    <div class="col-sm-6 mb-2">
                                         ILC : <span class="fw-bold">{{ $data->ilc }}</span>
                                     </div>
                                     <div class="col-sm-6">
                                         Ekspor : <span class="fw-bold"> {{ $data->ekspor }}</span>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-6 mb-2">
                                         ILC Cutting : <span class="fw-bold"> {{ $data->ilc_cutting }}</span>
                                     </div>
                                     <div class="col-sm-6">
                                         Tanggal : <span class="fw-bold">{{ $tanggal }}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        Total Berat : <span class="fw-bold">{{ $totalBerat }} Kg</span>
                                     </div>
                                 </div>
                             </div>
@@ -88,6 +91,9 @@
                             <div class="card-body">
                                 <form id="refinedMaterialLotsForm">
                                     <div class="row">
+                                        <div class="col-12">
+                                            <div id="error_combination" class="alert alert-danger d-none"></div>
+                                        </div>
                                         <div class="col-6">
                                             <label for="berat" class="form-label">Berat</label>
                                             <input type="number" class="form-control" placeholder="Berat" id="berat"
@@ -148,6 +154,15 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
                             </div>
                             <div class="card-body">
+                                <div class="row align-items-start">
+                                    <div class="col-sm-6 mb-1">
+                                        Total Berat: <span class="fw-bold" id="total_berat">{{ $totalBeratGrade }} kg</span>
+                                    </div>
+                                    <div class="col-sm-6 mb-1">
+                                        Sisa Berat: <span class="fw-bold" id="sisa_berat">{{ $totalSisa }} kg</span>
+                                    </div>
+                                </div>
+                                <hr>
                                 <table class="table table-striped mt-0 datatable" id="datatable">
                                     <thead>
                                         <tr>
@@ -293,7 +308,7 @@
                 const noIkanValue = noIkanSelect.value;
                 if (!noIkanValue) {
                     console.log("no ikan belum dipilih");
-                    return;
+                    // return;
                 }
 
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -307,30 +322,19 @@
                     });
 
                     const data = await response.json();
-                    if (data.errors) {
-                        Object.keys(data.errors).forEach(fieldName => {
-                            const inputField = document.getElementById(fieldName);
-                            if (inputField) {
-                                inputField.classList.add('is-invalid');
-                                if (inputField.nextElementSibling) {
-                                    inputField.nextElementSibling.textContent = data.errors[
-                                        fieldName][0];
-                                }
-                            }
-                        });
 
-                        const validFields = document.querySelectorAll('.is-invalid');
-                        validFields.forEach(validField => {
-                            const fieldName = validField.id;
-                            if (!data.errors[fieldName]) {
-                                validField.classList.remove('is-invalid');
-                                if (validField.nextElementSibling) {
-                                    validField.nextElementSibling.textContent = '';
-                                }
-                            }
-                        });
-                    } else {
+                    if (response.ok) {
+                        document.getElementById('total_berat').textContent = `${data.totalBerat} kg`;
+
+                        const sisaBerat = calculateSisaBerat(data.totalBerat);
+                        document.getElementById('sisa_berat').textContent = `${sisaBerat} kg`;
+
                         const invalidInputs = document.querySelectorAll('.is-invalid');
+
+                        const errorCombination = document.getElementById('error_combination');
+                        errorCombination.innerHTML = '';
+                        errorCombination.classList.add('d-none');
+
                         invalidInputs.forEach(invalidInput => {
                             invalidInput.value = '';
                             invalidInput.classList.remove('is-invalid');
@@ -340,7 +344,7 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        // form.reset();
+
                         $('.datatable').DataTable().ajax.reload();
                         const autoNumberStatus = localStorage.getItem('auto_number');
                         if (autoNumberStatus === 'on') {
@@ -348,6 +352,35 @@
                         } else {
                             autoNumberSwitch.checked = false;
                             document.getElementById('no_loin').readOnly = false;
+                        }
+                    } else {
+                        if (data.errors && data.errors.unique_combination) {
+                            const errorCombination = document.getElementById('error_combination');
+                            errorCombination.innerHTML = '';
+                            errorCombination.classList.remove('d-none');
+                            errorCombination.innerHTML += `<li>${data.errors.unique_combination}</li>`;
+                        } else if (data.errors) {
+                            Object.keys(data.errors).forEach(fieldName => {
+                                const inputField = document.getElementById(fieldName);
+                                if (inputField) {
+                                    inputField.classList.add('is-invalid');
+                                    if (inputField.nextElementSibling) {
+                                        inputField.nextElementSibling.textContent = data.errors[
+                                            fieldName][0];
+                                    }
+                                }
+                            });
+
+                            const validFields = document.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                const fieldName = validField.id;
+                                if (!data.errors[fieldName]) {
+                                    validField.classList.remove('is-invalid');
+                                    if (validField.nextElementSibling) {
+                                        validField.nextElementSibling.textContent = '';
+                                    }
+                                }
+                            });
                         }
                     }
                 } catch (error) {
@@ -358,6 +391,12 @@
 
         async function kodeILC(ilc) {
             document.getElementById('ilc').value = ilc;
+        }
+
+        function calculateSisaBerat(totalBerat) {
+            const total = " {{ $totalBerat }}";
+
+            return total - totalBerat;
         }
 
         async function hapus(id) {
@@ -387,14 +426,20 @@
                                     'success'
                                 );
                                 $('.datatable').DataTable().ajax.reload();
-                                const autoNumberStatus = localStorage.getItem(
-                                    'auto_number');
-                                if (autoNumberStatus === 'on') {
-                                    nextNumber(ilc_cutting, nomorIkan);
+                                const autoNumberStatus = localStorage.getItem('auto_number');
+                                const noIkanSelect = document.getElementById('no_ikan');
+                                const noIkanValue = noIkanSelect.value;
+
+                                if (noIkanSelect.value == "") {
+                                    console.log("no ikan belum dipilih");
+                                    return;
                                 } else {
-                                    autoNumberSwitch.checked = false;
-                                    document.getElementById('no_loin').readOnly = false;
-                                    // document.getElementById('auto_off').checked = true;
+                                    if (autoNumberStatus === 'on') {
+                                        nextNumber(ilc_cutting, nomorIkan);
+                                    } else {
+                                        autoNumberSwitch.checked = false;
+                                        document.getElementById('no_loin').readOnly = false;
+                                    }
                                 }
                             } else {
                                 Swal.fire(
@@ -423,7 +468,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const noIkanSelect = document.getElementById('no_ikan');
-                    noIkanSelect.innerHTML = '<option selected disabled>Pilih Nomor Ikan</option>';
+                    noIkanSelect.innerHTML = '<option value="" selected disabled>Pilih Nomor Ikan</option>';
                     data.forEach(no_ikan => {
                         const option = document.createElement('option');
                         option.value = no_ikan;
