@@ -78,7 +78,7 @@
                                         Tanggal : <span class="fw-bold">{{ $tanggal }}</span>
                                     </div>
                                     <div class="col-sm-6">
-                                        Total Berat : <span class="fw-bold">{{ $totalBerat }} Kg</span>
+                                        Total Berat : <span class="fw-bold" id="total_berat_receiving"> </span>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-6">
+                                        {{-- <div class="col-6">
                                             <div class="mb-3">
                                                 <label for="grade" class="form-label">Grade</label>
                                                 <input type="text" class="form-control" placeholder="Grade"
@@ -135,7 +135,15 @@
                                                 <div class="invalid-feedback">
                                                 </div>
                                             </div>
+                                        </div> --}}
+
+                                        <p class="form-label">Grade</p>
+                                        <div class="col-12 mb-3">
+                                            <div class="gap-4" id="gradesContainer">
+
+                                            </div>
                                         </div>
+                                        <input type="hidden" id="selectedGrade" name="grade" value="">
 
                                         <div class="col-lg-12 mt-2">
                                             <div class="text-start">
@@ -156,10 +164,13 @@
                             <div class="card-body">
                                 <div class="row align-items-start">
                                     <div class="col-sm-6 mb-1">
-                                        Total Berat: <span class="fw-bold" id="total_berat">{{ $totalBeratGrade }} kg</span>
+                                        Total Berat : <span class="fw-bold" id="total_berat"> kg</span>
                                     </div>
                                     <div class="col-sm-6 mb-1">
-                                        Sisa Berat: <span class="fw-bold" id="sisa_berat">{{ $totalSisa }} kg</span>
+                                        Sisa Berat : <span class="fw-bold" id="sisa_berat"> kg</span>
+                                    </div>
+                                    <div class="col-sm-6 mb-1">
+                                        Persentase : <span class="fw-bold" id="persentasePenggunaan"> </span>
                                     </div>
                                 </div>
                                 <hr>
@@ -239,10 +250,12 @@
         const ilc_cutting = "{{ $data->ilc_cutting }}";
         const ilc = "{{ $data->ilc }}";
         const no_ikan = document.getElementById('no_ikan').value;
-
         var nomorIkan = '';
+
         document.addEventListener('DOMContentLoaded', function() {
             populateNoIkan(ilc);
+            calculateTotalWeight(ilc);
+            grade();
 
             const autoNumberStatus = localStorage.getItem('auto_number') || 'on';
             const autoNumberSwitch = document.getElementById('auto_number_switch');
@@ -302,7 +315,8 @@
 
                 const form = event.target;
                 const formData = new FormData(form);
-                formData.append('ilc_cutting', ilc_cutting); // menambahkan ilc ke formData
+                formData.append('ilc_cutting', ilc_cutting);
+                formData.append('ilc', ilc);
 
                 const noIkanSelect = document.getElementById('no_ikan');
                 const noIkanValue = noIkanSelect.value;
@@ -324,13 +338,8 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        document.getElementById('total_berat').textContent = `${data.totalBerat} kg`;
-
-                        const sisaBerat = calculateSisaBerat(data.totalBerat);
-                        document.getElementById('sisa_berat').textContent = `${sisaBerat} kg`;
-
+                        calculateTotalWeight(ilc);
                         const invalidInputs = document.querySelectorAll('.is-invalid');
-
                         const errorCombination = document.getElementById('error_combination');
                         errorCombination.innerHTML = '';
                         errorCombination.classList.add('d-none');
@@ -393,10 +402,56 @@
             document.getElementById('ilc').value = ilc;
         }
 
-        function calculateSisaBerat(totalBerat) {
-            const total = " {{ $totalBerat }}";
+        function calculateTotalWeight(ilc) {
+            fetch("/refined-material-lots/calculateTotalWeight/" + ilc)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total_berat').textContent = `${data.totalBerat} Kg`;
+                    document.getElementById('total_berat_receiving').textContent = `${data.totalBeratReceiving} Kg`;
+                    document.getElementById('sisa_berat').textContent = `${data.totalSisaBerat} Kg`;
+                    document.getElementById('persentasePenggunaan').textContent = `${data.persentasePenggunaan} %`;
+                })
+                .catch(error => {
+                    console.error('Error fetching next no_ikan:', error);
+                });
+        }
 
-            return total - totalBerat;
+        function grade() {
+            fetch('/grades/getAll')
+                .then(response => response.json())
+                .then(data => {
+                    const gradesContainer = document.getElementById('gradesContainer');
+                    const selectedGradeInput = document.getElementById('selectedGrade');
+                    gradesContainer.innerHTML = '';
+
+                    data.forEach(grade => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'btn btn-soft-secondary custom-toggle m-2';
+                        button.setAttribute('data-bs-toggle', 'button');
+                        button.innerHTML = `
+                    <span class="icon-on mx-2">${grade}</span>
+                    <span class="icon-off mx-2">${grade}</span>
+                `;
+
+                        button.addEventListener('click', () => {
+                            // Remove active class from all buttons
+                            const buttons = gradesContainer.querySelectorAll('button');
+                            buttons.forEach(btn => btn.classList.remove('active'));
+
+                            // Add active class to the clicked button
+                            button.classList.add('active');
+
+                            // Set the selected grade value
+                            selectedGradeInput.value = grade;
+                        });
+
+                        gradesContainer.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    console.error('err saat mengambil data:', error);
+                });
         }
 
         async function hapus(id) {
@@ -426,6 +481,7 @@
                                     'success'
                                 );
                                 $('.datatable').DataTable().ajax.reload();
+                                calculateTotalWeight(ilc);
                                 const autoNumberStatus = localStorage.getItem('auto_number');
                                 const noIkanSelect = document.getElementById('no_ikan');
                                 const noIkanValue = noIkanSelect.value;
@@ -463,7 +519,6 @@
         }
 
         function populateNoIkan(ilc) {
-            // alert("ilc: " + ilc);
             fetch("/raw-material-lots/getNoIkan/" + ilc)
                 .then(response => response.json())
                 .then(data => {

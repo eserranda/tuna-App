@@ -155,6 +155,12 @@
                  </li>
 
                  <li class="nav-item">
+                     <a class="nav-link menu-link" href="/grades">
+                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Grade</span>
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
                      <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="users">
                          <i class="ri-pages-line"></i> <span data-key="t-users">Users</span>

@@ -16,13 +16,28 @@ class RefinedMaterialLotsController extends Controller
     {
         $data = Cutting::where('ilc_cutting', $ilc_cutting)->first();
         $tanggal = Carbon::parse($data->created_at)->format('d-m-Y');
-        $totalBerat = RawMaterialLots::where('ilc', $data->ilc)->sum('berat');
-        $totalBeratGrade = RefinedMaterialLots::where('ilc_cutting',  $ilc_cutting)->sum('berat');
-        $totalSisa = $totalBerat - $totalBeratGrade;
 
-        return view('refined-material-lot.index', compact('data', 'tanggal', 'totalBerat', 'totalBeratGrade', 'totalSisa'));
+        return view('refined-material-lot.index', compact('data', 'tanggal'));
     }
 
+    public function calculateTotalWeight($ilc)
+    {
+        $totalBeratReceiving = RawMaterialLots::where('ilc', $ilc)->sum('berat');
+        $totalBerat = RefinedMaterialLots::where('ilc', $ilc)->sum('berat');
+        $totalSisa = round($totalBeratReceiving - $totalBerat, 2);
+
+        if ($totalBeratReceiving != 0) {
+            $persentasePenggunaan = round(($totalBerat / $totalBeratReceiving) * 100, 2);
+        } else {
+            $persentasePenggunaan = 0;
+        }
+        return response()->json([
+            'totalBerat' => $totalBerat,
+            'totalBeratReceiving' => $totalBeratReceiving,
+            'totalSisaBerat' => $totalSisa,
+            'persentasePenggunaan' => $persentasePenggunaan
+        ]);
+    }
     public function getAll(Request $request, $ilc_cutting)
     {
         if ($request->ajax()) {
@@ -53,12 +68,15 @@ class RefinedMaterialLotsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'ilc' => 'required',
             'ilc_cutting' => 'required',
             'berat' => 'required|numeric',
             'no_ikan' => 'required|numeric',
             'no_loin' => 'required|numeric',
             'grade' => 'required',
         ], [
+            'ilc.required' => 'ILC Wajib Diisi',
+            'ilc_cutting.required' => 'ILC Cutting Wajib Diisi',
             'berat.required' => 'Berat Ikan Wajib Diisi',
             'berat.numeric' => 'Berat Ikan Harus Berupa Angka',
             'no_ikan.required' => 'Nomor Ikan Wajib Diisi',
@@ -98,6 +116,7 @@ class RefinedMaterialLotsController extends Controller
         }
 
         $save =  RefinedMaterialLots::create([
+            'ilc' => $request->ilc,
             'id_supplier' => $id_supplier,
             'id_cutting' => $id_cutting,
             'ilc_cutting' => $request->ilc_cutting,
@@ -108,10 +127,8 @@ class RefinedMaterialLotsController extends Controller
         ]);
 
         if ($save) {
-            $totalBerat = RefinedMaterialLots::where('ilc_cutting', $request->ilc_cutting)->sum('berat');
             return response()->json([
                 'success' => true,
-                'totalBerat' => $totalBerat,
             ]);
         }
     }

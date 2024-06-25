@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\CuttingController;
+use App\Http\Controllers\GradesController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\RawMaterialLotsController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,14 @@ use App\Models\Cutting;
 
 Route::get('/', function () {
     return view('dashboard.index');
+});
+
+Route::prefix('grades')->controller(GradesController::class)->group(function () {
+    Route::get('/', 'index')->name('grades.index');
+    Route::post('/store', 'store')->name('grades.store');
+    Route::get('/getAll', 'getAll')->name('grades.getAll');
+    Route::get('/getAllData', 'getAllData')->name('grades.getAllData');
+    Route::delete('/{id}', 'destroy')->name('grades.destroy');
 });
 
 Route::prefix('produk')->controller(ProductsController::class)->group(function () {
@@ -65,6 +74,9 @@ Route::prefix('refined-material-lots')->controller(RefinedMaterialLotsController
     Route::get('/getAll/{ilc_cutting}', 'getAll')->name('refined_material_lots.getAll');
     Route::get('/nextNumber/{ilc_cutting}/{no_ikan}', 'nextNumber')->name('refined_material_lots.nextNumber');
     Route::delete('/{id}', 'destroy')->name('refined_material_lots.destroy');
+
+    Route::get('/calculateTotalWeight/{ilc}', 'calculateTotalWeight')->name('refined_material_lots.calculateTotalWeight');
+
     // Route::get('/getAllReceiving', 'getAllReceiving')->name('cutting.getAllReceiving');
 });
 
@@ -85,6 +97,8 @@ Route::prefix('raw-material-lots')->controller(RawMaterialLotsController::class)
     Route::delete('/{id}', 'destroy')->name('raw_material_lots.destroy');
     Route::get('/getNoIkan/{ilc}', 'getNoIkan')->name('raw_material_lots.get_no_ikan');
     Route::get('/nextNumber/{ilc}', 'nextNumber')->name('raw_material_lots.nextNumber');
+
+    Route::get('/calculateTotalWeight/{ilc}', 'calculateTotalWeight')->name('raw_material_lots.calculateTotalWeight');
 
 
     // belum di pakai 

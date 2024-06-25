@@ -21,6 +21,14 @@ class RawMaterialLotsController extends Controller
         return response()->json($noIkanList);
     }
 
+    public function calculateTotalWeight($ilc)
+    {
+        $totalBerat = RawMaterialLots::where('ilc', $ilc)->sum('berat');
+        return response()->json([
+            'totalBerat' => $totalBerat
+        ]);
+    }
+
     public function nextNumber($ilc)
     {
         $lastLot = RawMaterialLots::where('ilc', $ilc)->orderBy('no_ikan', 'desc')->first();

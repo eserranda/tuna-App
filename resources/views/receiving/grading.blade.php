@@ -98,40 +98,16 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="col-6">
-                                            <div class="mb-3">
-                                                <label for="grade" class="form-label">Grade</label>
-                                                <input type="text" class="form-control" placeholder="Grade"
-                                                    id="grade" name="grade">
-                                                <div class="invalid-feedback">
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        {{-- <div class="col-12">
-                                            <div class="mb-3">
-                                                <label for="grade" class="form-label">Grade</label>
-                                            </div>
-                                        </div> --}}
-
-                                        {{-- <h5>Grade</h5>
                                         <p class="form-label">Grade</p>
                                         <div class="col-12 mb-3">
-                                            <div class="hstack gap-4">
-                                                <button type="button" class="btn btn-soft-danger custom-toggle"
-                                                    data-bs-toggle="button">
-                                                    <span class="icon-on">C</span>
-                                                    <span class="icon-off">C</span>
-                                                </button>
+                                            <div class="gap-4" id="gradesContainer">
 
-                                                <button type="button" class="btn btn-soft-danger custom-toggle"
-                                                    data-bs-toggle="button">
-                                                    <span class="icon-on">C</span>
-                                                    <span class="icon-off">C</span>
-                                                </button>
                                             </div>
-                                        </div> --}}
-
+                                        </div>
+                                        <input type="hidden" id="selectedGrade" name="grade" value="">
+                                        <div class="invalid-feedback">
+                                        </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="text-start">
                                                 <button type="submit" class="btn btn-primary">Buat Receiving</button>
@@ -151,21 +127,15 @@
                             <div class="card-body">
                                 <div class="row align-items-start">
                                     <div class="col-sm-6 mb-1">
-                                        Total Berat :
+                                        Total Berat : <span class="fw-bold" id="total_berat"> </span>
                                     </div>
-                                    {{-- <div class="col-sm-6">
-                                        Ekspor :
-                                    </div>
-                                    <div class="col-sm-6 ">
-                                        ILC Cutting :
-                                    </div> --}}
                                 </div>
                                 <hr>
                                 <table class="table table-striped mt-0 datatable" id="datatable">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nomor Ikan</th>
+                                            <th>No. Ikan</th>
                                             <th>Grade</th>
                                             <th>Berat</th>
                                             <th>Opsi</th>
@@ -226,6 +196,7 @@
                 // dom: 'Bftip',
             });
         });
+
         var ilc = "{{ $data->ilc }}";
         document.addEventListener('DOMContentLoaded', function() {
             const autoNumberStatus = localStorage.getItem('auto_number') || 'on';
@@ -255,6 +226,8 @@
                 }
             });
 
+            calculateTotalWeight(ilc);
+            grade();
 
             document.getElementById('rawMaterialLotsForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
@@ -308,8 +281,10 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        // form.reset();
+
                         $('.datatable').DataTable().ajax.reload();
+                        calculateTotalWeight(ilc);
+
                         const autoNumberStatus = localStorage.getItem('auto_number');
                         if (autoNumberStatus === 'on') {
                             nextNumber(ilc);
@@ -323,6 +298,55 @@
                 }
             });
         });
+
+        function calculateTotalWeight(ilc) {
+            fetch('/raw-material-lots/calculateTotalWeight/' + ilc)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total_berat').textContent = `${data.totalBerat} Kg`;
+                })
+                .catch(error => {
+                    console.error('Error fetching total berat:', error);
+                });
+        }
+
+        function grade() {
+            fetch('/grades/getAll')
+                .then(response => response.json())
+                .then(data => {
+                    const gradesContainer = document.getElementById('gradesContainer');
+                    const selectedGradeInput = document.getElementById('selectedGrade');
+                    gradesContainer.innerHTML = '';
+
+                    data.forEach(grade => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'btn btn-soft-secondary custom-toggle m-2';
+                        button.setAttribute('data-bs-toggle', 'button');
+                        button.innerHTML = `
+                    <span class="icon-on mx-2">${grade}</span>
+                    <span class="icon-off mx-2">${grade}</span>
+                `;
+
+                        button.addEventListener('click', () => {
+                            // Remove active class from all buttons
+                            const buttons = gradesContainer.querySelectorAll('button');
+                            buttons.forEach(btn => btn.classList.remove('active'));
+
+                            // Add active class to the clicked button
+                            button.classList.add('active');
+
+                            // Set the selected grade value
+                            selectedGradeInput.value = grade;
+                        });
+
+                        gradesContainer.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    console.error('err saat mengambil data:', error);
+                });
+        }
 
         function nextNumber(ilc) {
             return fetch("/raw-material-lots/nextNumber/" + ilc)
@@ -362,6 +386,7 @@
                                     'success'
                                 );
                                 $('.datatable').DataTable().ajax.reload();
+                                calculateTotalWeight(ilc);
                                 const autoNumberStatus = localStorage.getItem('auto_number');
                                 if (autoNumberStatus === 'on') {
                                     nextNumber(ilc);
