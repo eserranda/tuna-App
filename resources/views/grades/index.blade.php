@@ -106,7 +106,7 @@
 
             try {
                 const response = await fetch(form.action, {
-                    method: form.method,
+                    method: form,
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json'

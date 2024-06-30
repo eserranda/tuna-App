@@ -61,6 +61,10 @@ Route::prefix('retouching')->controller(RetouchingController::class)->group(func
     Route::delete('/{id}', 'destroy')->name('retouching.destroy');
     Route::get('/getAllCutting', 'getAllCutting')->name('retouching.getAllCutting');
 
+    Route::get('/getNoIkan/{ilc_cutting}', 'getNoIkan')->name('retouching.getNoIkan');
+
+    Route::get('/calculateLoin/{ilc_cutting}/{no_ikan}', 'calculateLoin')->name('retouching.calculateLoin');
+
     // Route::post('/store', 'store')->name('retouching.store');
     // Route::get('/getAll/{ilc_cutting}', 'getAll')->name('retouching.getAll');
     // Route::get('/nextNumber/{ilc_cutting}/{no_ikan}', 'nextNumber')->name('retouching.nextNumber');

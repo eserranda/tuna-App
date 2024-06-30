@@ -46,7 +46,6 @@ class CustomersController extends Controller
             'phone' => 'required',
         ], [
             'nama.required' => 'Nama harus diisi',
-
             'customer_group.required' => 'Grup customer harus diisi',
             'email.required' => 'Email harus diisi',
             'phone.required' => 'Nomor telepon harus diisi',

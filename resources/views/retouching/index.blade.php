@@ -90,7 +90,7 @@
                             <div class="card-body">
                                 <form id="cuttingForm">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-6  mb-2">
                                             <label for="berat" class="form-label">ILC Cutting</label>
                                             <input type="text" class="form-control bg-light"
                                                 placeholder="Internal Lot Code" id="ilc_cutting" name="ilc_cutting"
@@ -99,9 +99,18 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="berat" class="form-label">Berat</label>
-                                            <input type="number" class="form-control" placeholder="Berat" id="berat"
-                                                name="berat" step="0.01">
+                                            <div class="mb-0">
+                                                <label for="no_ikan" class="form-label">Nomor Ikan</label>
+                                                <select class="form-select mb-0" id="no_ikan" name="no_ikan">
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="berat" class="form-label">Total Berat 4 Loin</label>
+                                            <input type="number" class="form-control bg-light" placeholder="Berat"
+                                                id="berat" name="berat" readonly>
                                             <div class="invalid-feedback">
                                             </div>
                                         </div>
@@ -148,8 +157,48 @@
 @push('scripts')
     <script>
         async function kodeILC(ilc_cutting) {
+            try {
+                const response = await fetch('/retouching/getNoIkan/' + ilc_cutting, {
+                    method: 'GET',
+                });
+                const data = await response.json();
+                console.log(data)
+                if (response.ok) {
+                    const noIkanSelect = document.getElementById('no_ikan');
+                    noIkanSelect.innerHTML = '<option value="" selected disabled>Pilih Nomor Ikan</option>';
+                    data.forEach(no_ikan => {
+                        const option = document.createElement('option');
+                        option.value = no_ikan;
+                        option.textContent = no_ikan;
+                        noIkanSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+            }
+
+
             document.getElementById('ilc_cutting').value = ilc_cutting;
         }
+
+        document.getElementById('no_ikan').addEventListener('change', async function(event) {
+            var ilc_cutting = document.getElementById('ilc_cutting').value;
+            var noIkanValue = event.target.value;
+            try {
+                const response = await fetch('/retouching/calculateLoin/' + ilc_cutting + '/' + noIkanValue, {
+                    method: 'GET',
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('berat').value = data;
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+            }
+        });
+
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('cuttingForm').addEventListener('submit', async (event) => {
@@ -169,9 +218,41 @@
                     });
 
                     const data = await response.json();
-
                     if (response.ok) {
+                        const invalidInputs = document.querySelectorAll('.is-invalid');
+                        invalidInputs.forEach(invalidInput => {
+                            invalidInput.value = '';
+                            invalidInput.classList.remove('is-invalid');
+                            const errorNextSibling = invalidInput.nextElementSibling;
+                            if (errorNextSibling && errorNextSibling.classList.contains(
+                                    'invalid-feedback')) {
+                                errorNextSibling.textContent = '';
+                            }
+                        });
+
                         $('.datatableRetouching').DataTable().ajax.reload();
+                    } else {
+                        Object.keys(data.errors).forEach(fieldName => {
+                            const inputField = document.getElementById(fieldName);
+                            if (inputField) {
+                                inputField.classList.add('is-invalid');
+                                if (inputField.nextElementSibling) {
+                                    inputField.nextElementSibling.textContent = data.errors[
+                                        fieldName][0];
+                                }
+                            }
+                        });
+
+                        const validFields = document.querySelectorAll('.is-invalid');
+                        validFields.forEach(validField => {
+                            const fieldName = validField.id;
+                            if (!data.errors[fieldName]) {
+                                validField.classList.remove('is-invalid');
+                                if (validField.nextElementSibling) {
+                                    validField.nextElementSibling.textContent = '';
+                                }
+                            }
+                        });
                     }
 
                 } catch (error) {
@@ -241,8 +322,8 @@
                         name: 'customer_grup',
                     },
                     {
-                        data: 'berat',
-                        name: 'berat',
+                        data: 'total_berat',
+                        name: 'total_berat',
                     },
                     {
                         data: 'action',

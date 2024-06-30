@@ -6,6 +6,9 @@ use App\Models\Cutting;
 use App\Models\Retouching;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\RawMaterialLots;
+use Illuminate\Support\Facades\DB;
+use App\Models\RefinedMaterialLots;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,12 +23,24 @@ class RetouchingController extends Controller
     public function getAll(Request $request)
     {
         if ($request->ajax()) {
-            $data = Retouching::latest('created_at')->get();
+            // $data = Retouching::all()->unique('ilc_cutting');
+            $data = Retouching::select('ilc_cutting', 'id_supplier', 'tanggal',  'customer_grup',  DB::raw('SUM(berat) as total_berat'), DB::raw('MAX(created_at) as created_at'))
+                ->groupBy('ilc_cutting', 'id_supplier', 'tanggal', 'customer_grup')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
             $data->transform(function ($item) {
-                $item->tanggal = Carbon::parse($item->tanggal)->format('d-m-Y');
+                // Mengambil ID terkait
+                $relatedId = Retouching::where('ilc_cutting', $item->ilc_cutting)
+                    ->where('id_supplier', $item->id_supplier)
+                    ->where('customer_grup', $item->customer_grup)
+                    ->orderBy('created_at', 'desc')
+                    ->value('id');
+                $item->id = $relatedId;
+
+                $item->tanggal = Carbon::parse($item->created_at)->format('d-m-Y');
                 return $item;
             });
-
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -35,6 +50,9 @@ class RetouchingController extends Controller
                     } else {
                         return '-';
                     }
+                })
+                ->addColumn('total_berat', function ($row) {
+                    return $row->total_berat;
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
@@ -61,9 +79,25 @@ class RetouchingController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getNoIkan($ilc_cutting)
+    {
+        $noIkanList = RefinedMaterialLots::where('ilc_cutting', $ilc_cutting)
+            ->orderBy('no_ikan', 'asc')
+            ->distinct()
+            ->pluck('no_ikan');
+
+        return response()->json($noIkanList);
+    }
+
+    public function calculateLoin($ilc_cutting, $no_ikan)
+    {
+        // dd($ilc_cutting, $no_ikan);
+        $beratLoin = RefinedMaterialLots::where('ilc_cutting', $ilc_cutting)
+            ->where('no_ikan', $no_ikan)
+            ->sum('berat');
+        return response()->json($beratLoin);
+    }
+
     public function create()
     {
         //
@@ -72,16 +106,27 @@ class RetouchingController extends Controller
 
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'ilc_cutting' => 'required|unique:retouchings,ilc_cutting',
+            'ilc_cutting' => 'required',
+            'no_ikan' => 'required',
             'berat' => 'required|numeric',
         ], [
             'ilc_cutting.required' => 'ILC Cutting Harus Diisi',
-            'ilc_cutting.unique' => 'ILC Cutting Sudah Ada',
             'berat.required' => 'Berat Harus Diisi',
             'berat.numeric' => 'Berat Harus Angka',
+            'no_ikan.required' => 'No Ikan Harus Diisi',
         ]);
+
+        $validator->after(function ($validator) use ($request) {
+            $existingEntry = Retouching::where('ilc_cutting', $request->ilc_cutting)
+                ->where('no_ikan', $request->no_ikan)
+                ->exists();
+
+            if ($existingEntry) {
+                $validator->errors()->add('ilc_cutting', 'ILC Cutting sudah ada.');
+                $validator->errors()->add('no_ikan', 'No Ikan sudah ada.');
+            }
+        });
 
         if ($validator->fails()) {
             return response()->json([
@@ -102,6 +147,7 @@ class RetouchingController extends Controller
         $save->id_supplier = $id_supplier;
         $save->ilc = $ilc;
         $save->ilc_cutting = $request->ilc_cutting;
+        $save->no_ikan = $request->no_ikan;
         $save->customer_grup = $customer_grup;
         $save->tanggal = $tanggal;
         $save->berat = $request->berat;
