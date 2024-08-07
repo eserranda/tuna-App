@@ -46,7 +46,7 @@
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="javascript: void(0);">Product Log</a></li>
-            <li class="breadcrumb-item active">Buat Produk</li>
+            <li class="breadcrumb-item active">Buat produk</li>
         </ol>
     </div>
 @endsection
@@ -57,14 +57,13 @@
             <div class="d-flex flex-column h-100">
                 <div class="row mb-0">
                     <div class="col-md-5">
-                        {{-- <div class="card mb-1">
+                        <div class="card mb-1">
                             <div class="card-body">
                                 <h4 class="card-title mb-2">Detail : </h4>
-
                                 <div class="col-sm-12">
                                     ILC Cutting : <span class="fw-bold"> {{ $data->ilc_cutting }}</span>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 my-1">
                                     Ekspor : <span class="fw-bold"> {{ $data->customer_grup }}</span>
                                 </div>
                                 <div class="col-sm-6">
@@ -72,7 +71,7 @@
                                 </div>
 
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="card-title mb-0">Pilih Produk</h6>

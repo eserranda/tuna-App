@@ -133,10 +133,11 @@
                                         <tr>
                                             <th>No</th>
                                             <th>ILC</th>
-                                            <th>Tanggal</th>
+                                            {{-- <th>Tanggal</th> --}}
                                             <th>Supplier</th>
                                             <th>Ekspor</th>
                                             <th>Berat</th>
+                                            <th>Persen</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -313,12 +314,12 @@
                         orderable: false,
 
                     },
-                    {
-                        data: 'tanggal',
-                        name: 'tanggal',
-                        orderable: false,
+                    // {
+                    //     data: 'tanggal',
+                    //     name: 'tanggal',
+                    //     orderable: false,
 
-                    },
+                    // },
                     {
                         data: 'id_supplier',
                         name: 'id_supplier',
@@ -334,6 +335,12 @@
                     {
                         data: 'total_berat',
                         name: 'total_berat',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'checking',
+                        name: 'checking',
                         orderable: false,
 
                     },

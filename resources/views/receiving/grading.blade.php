@@ -145,7 +145,7 @@
                                             <th>No</th>
                                             <th>No. Ikan</th>
                                             <th>Grade</th>
-                                            <th>Berat</th>
+                                            <th>Berat (Kg)</th>
                                             <th>Opsi</th>
                                         </tr>
                                     </thead>

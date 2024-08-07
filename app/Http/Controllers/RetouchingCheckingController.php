@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Receiving;
+use App\Models\Retouching;
 use Illuminate\Http\Request;
-use App\Models\ReceivingChecking;
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\RetouchingChecking;
 use Illuminate\Support\Facades\Validator;
 
-class ReceivingCheckingController extends Controller
+class RetouchingCheckingController extends Controller
 {
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ReceivingChecking::latest('created_at')->get();
-            return DataTables::of($data)
+            $data = RetouchingChecking::latest('created_at')->get();
+            return datatables()::of($data)
+                ->addIndexColumn()
                 ->addIndexColumn()
                 ->editColumn('whole', function ($row) {
                     if ($row->whole != "") {
@@ -27,6 +27,13 @@ class ReceivingCheckingController extends Controller
                 ->editColumn('uji_lab', function ($row) {
                     if ($row->uji_lab != "") {
                         return $row->uji_lab;
+                    } else {
+                        return "-";
+                    }
+                })
+                ->editColumn('penampakan', function ($row) {
+                    if ($row->penampakan != "") {
+                        return $row->penampakan;
                     } else {
                         return "-";
                     }
@@ -66,6 +73,7 @@ class ReceivingCheckingController extends Controller
                         return "-";
                     }
                 })
+
                 ->addColumn('action', function ($row) {
                     // $btn = '<a href="javascript:void(0);" onclick="update(' . $row->id . ')"><i class="ri-pencil-fill text-info"></i></a>';
                     $btn = '<a href="javascript:void(0);" onclick="update(\'' . $row->id  . '\', \'' . $row->ilc . '\')"><i class="ri-pencil-fill text-info"></i></a>';
@@ -76,15 +84,15 @@ class ReceivingCheckingController extends Controller
                 ->make(true);
         }
 
-        return view('receiving-checking.index');
+        return view('retouching-checking.index');
     }
 
-
-    public function update(Request $request, ReceivingChecking $receivingChecking)
+    public function update(Request $request, RetouchingChecking $retouchingChecking)
     {
         $validator = Validator::make($request->all(), [
-            'whole' => 'required|numeric|min:0|max:4',
+            'ilc' => 'required',
             'uji_lab' => 'required|numeric|min:0|max:4',
+            'penampakan' => 'required|numeric|min:0|max:4',
             'tekstur' => 'required|numeric|min:0|max:4',
             'bau' => 'required|numeric|min:0|max:4',
             'es' => 'required|numeric|min:0|max:4',
@@ -110,9 +118,10 @@ class ReceivingCheckingController extends Controller
         // Hitung nilai kesesuaian (hasil) dalam persentase dan bulatkan
         $nilaiKesesuaian = round(($averageX / 4) * 100, 0);
 
-        $updateReceivingChecking = ReceivingChecking::where('id', $request->id)->update([
-            'whole' => $request->whole,
+        $updateReceivingChecking = RetouchingChecking::where('id', $request->id)->update([
+            'ilc' => $request->ilc,
             'uji_lab' => $request->uji_lab,
+            'penampakan' => $request->penampakan,
             'tekstur' => $request->tekstur,
             'bau' => $request->bau,
             'es' => $request->es,
@@ -120,7 +129,7 @@ class ReceivingCheckingController extends Controller
             'hasil' => $nilaiKesesuaian,
         ]);
 
-        $updateReceiving = Receiving::where('ilc', $request->ilc)->update([
+        $updateReceiving = Retouching::where('ilc', $request->ilc)->update([
             'checking' => $nilaiKesesuaian,
         ]);
 

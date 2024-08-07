@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\RawMaterialLots;
 use Illuminate\Support\Facades\DB;
 use App\Models\RefinedMaterialLots;
+use App\Models\RetouchingChecking;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,8 +25,8 @@ class RetouchingController extends Controller
     {
         if ($request->ajax()) {
             // $data = Retouching::all()->unique('ilc_cutting');
-            $data = Retouching::select('ilc', 'ilc_cutting', 'id_supplier', 'tanggal',  'customer_grup',  DB::raw('SUM(berat) as total_berat'), DB::raw('MAX(created_at) as created_at'))
-                ->groupBy('ilc', 'ilc_cutting', 'id_supplier', 'tanggal', 'customer_grup')
+            $data = Retouching::select('ilc', 'ilc_cutting', 'id_supplier', 'tanggal',  'customer_grup', 'checking',  DB::raw('SUM(berat) as total_berat'), DB::raw('MAX(created_at) as created_at'))
+                ->groupBy('ilc', 'ilc_cutting', 'id_supplier', 'tanggal', 'customer_grup', 'checking')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -34,6 +35,7 @@ class RetouchingController extends Controller
                 $relatedId = Retouching::where('ilc_cutting', $item->ilc_cutting)
                     ->where('id_supplier', $item->id_supplier)
                     ->where('customer_grup', $item->customer_grup)
+                    // ->where('checking', $item->checking)
                     ->orderBy('created_at', 'desc')
                     ->value('id');
                 $item->id = $relatedId;
@@ -51,12 +53,22 @@ class RetouchingController extends Controller
                         return '-';
                     }
                 })
+                ->editColumn('checking', function ($row) {
+                    if ($row->checking) {
+                        return $row->checking . '%';
+                    } else {
+                        return '-';
+                    }
+                })
                 ->addColumn('total_berat', function ($row) {
                     return $row->total_berat;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn = '<div class="d-flex justify-content-start align-items-center">';
+                    $btn .= '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="text-danger ri-delete-bin-5-line mx-3"></i></a>';
                     $btn .= ' <a href="/product-log/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
+                    $btn .= '</div>';
+
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -142,6 +154,10 @@ class RetouchingController extends Controller
 
         $tanggal = Carbon::now()->format('Y-m-d');
 
+        $checking = Retouching::where('ilc', $ilc)->first('checking');
+        if ($checking != null) {
+            $checking = $checking->checking;
+        }
 
         $save = new Retouching();
         $save->id_supplier = $id_supplier;
@@ -151,7 +167,16 @@ class RetouchingController extends Controller
         $save->customer_grup = $customer_grup;
         $save->tanggal = $tanggal;
         $save->berat = $request->berat;
+        $save->checking = $checking;
         $save->save();
+
+        // save data to retouching_checking
+        $getILC = RetouchingChecking::where('ilc', $ilc)->first('ilc');
+        if ($getILC == null) {
+            RetouchingChecking::create([
+                'ilc' => $ilc
+            ]);
+        }
 
         if ($save) {
             return response()->json([

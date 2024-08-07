@@ -38,7 +38,7 @@
 @endpush
 
 @section('title')
-    <h4 class="mb-sm-0">Receiving Checking</h4>
+    <h4 class="mb-sm-0">Retouching Checking</h4>
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="javascript: void(0);">Checking</a></li>
@@ -65,11 +65,11 @@
                                 <tr>
                                     <th>No</th>
                                     <th>ILC</th>
-                                    <th>Whole Check</th>
                                     <th>Lab. Check</th>
-                                    <th>Tekstur Check</th>
+                                    <th>Penampakan</th>
+                                    <th>Tekstur</th>
                                     <th>Bau</th>
-                                    <th>ES</th>
+                                    <th>Es</th>
                                     <th>Suhu</th>
                                     <th>Persen</th>
                                     <th>Opsi</th>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    @include('receiving-checking.edit')
+    @include('retouching-checking.edit')
 @endsection
 @push('scripts')
     <script>
@@ -102,7 +102,7 @@
                     "search": "",
                     "searchPlaceholder": "Cari Data",
                 },
-                ajax: "{{ route('receiving-checking.index') }}",
+                ajax: "{{ route('retouching-checking.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -112,18 +112,17 @@
                     {
                         data: 'ilc',
                         name: 'ilc',
-                        // orderable: false,
-
-                    },
-                    {
-                        data: 'whole',
-                        name: 'whole',
-                        orderable: false,
 
                     },
                     {
                         data: 'uji_lab',
                         name: 'uji_lab',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'penampakan',
+                        name: 'penampakan',
                         orderable: false,
 
                     },
@@ -143,19 +142,16 @@
                         data: 'es',
                         name: 'es',
                         orderable: false,
-
                     },
                     {
                         data: 'suhu',
                         name: 'suhu',
                         orderable: false,
-
                     },
                     {
                         data: 'hasil',
                         name: 'hasil',
                         orderable: false,
-
                     },
                     {
                         data: 'action',

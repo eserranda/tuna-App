@@ -33,7 +33,7 @@ class CuttingController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="d-flex justify-content-start align-items-center">';
-                    $btn .= '<a href="javascript:void(0);"title="Hapus" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-2"></i> </a>';
+                    $btn = '<a href="javascript:void(0);" onclick="hapus(\'' . $row->id  . '\', \'' . $row->ilc . '\')"><i class="text-danger ri-delete-bin-5-line mx-2"></i></a>';
                     $btn .= ' <a href="/refined-material-lots/' . $row->ilc_cutting . '"<i class="ri-arrow-right-line"></i></a>';
                     $btn .= '</div>';
                     return $btn;
@@ -46,7 +46,7 @@ class CuttingController extends Controller
     public function getAllReceiving(Request $request)
     {
         if ($request->ajax()) {
-            $data = Receiving::latest('created_at')->get();
+            $data = Receiving::where('used', 0)->latest('created_at')->get();
             $data->transform(function ($item) {
                 $item->tanggal = Carbon::parse($item->tanggal)->format('d-m-Y');
                 return $item;
@@ -101,6 +101,10 @@ class CuttingController extends Controller
             'ekspor' => $request->ekspor,
         ]);
 
+        Receiving::where('ilc', $request->ilc)->update([
+            'used' => true
+        ]);
+
         CuttingChecking::create([
             'ilc' => $request->ilc
         ]);
@@ -137,11 +141,16 @@ class CuttingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cutting $cutting, $id)
+    public function destroy(Cutting $cutting, $id, $ilc)
     {
         try {
             $del_siswa = $cutting::findOrFail($id);
             $del_siswa->delete();
+
+            Receiving::where('ilc', $ilc)->update([
+                'used' => false
+            ]);
+
 
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {

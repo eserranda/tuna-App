@@ -24,13 +24,11 @@ class ReceivingController extends Controller
     {
         if ($request->ajax()) {
             $data = Receiving::latest('created_at')->get();
-            // $data->transform(function ($item) {
-            //     $item->tanggal = Carbon::parse($item->tanggal)->format('d-m-Y');
-            //     return $item;
-            // });
-
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('tanggal', function ($row) {
+                    return Carbon::parse($row->tanggal)->format('d-m-Y');
+                })
                 ->editColumn('checking', function ($row) {
                     if ($row->checking != "") {
                         return ($row->checking . '%');
@@ -39,9 +37,10 @@ class ReceivingController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
+                    $btn = '<div class="d-flex justify-content-start align-items-center">';
                     $btn = '<a href="javascript:void(0);" onclick="hapus(\'' . $row->id  . '\', \'' . $row->ilc . '\')"><i class="text-danger ri-delete-bin-5-line mx-2"></i></a>';
-                    // $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="text-danger ri-delete-bin-5-line mx-2"></i></a>';
                     $btn .= ' <a href="/raw-material-lots/grading/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
+                    $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

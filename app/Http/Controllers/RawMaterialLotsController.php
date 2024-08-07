@@ -66,7 +66,7 @@ class RawMaterialLotsController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     // $btn = '<a href="/receiving/grading/' . $row->id . '"<i class="ri-delete-bin-5-line mx-3"></i></a>';
-                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="text-danger ri-delete-bin-5-line mx-3"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

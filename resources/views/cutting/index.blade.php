@@ -160,7 +160,7 @@
 
 @push('scripts')
     <script>
-        async function hapus(id) {
+        async function hapus(id, ilc) {
             Swal.fire({
                 title: 'Hapus Data?',
                 text: 'Data akan dihapus permanen!',
@@ -173,7 +173,7 @@
                 if (result.isConfirmed) {
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: '/cutting/' + id,
+                        url: '/cutting/' + id + '/' + ilc,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken
@@ -187,6 +187,7 @@
                                     'success'
                                 );
                                 $('.cuttingDatatable').DataTable().ajax.reload();
+                                $('.receiving').DataTable().ajax.reload();
                             } else {
                                 Swal.fire(
                                     'Gagal!',
@@ -229,6 +230,7 @@
                     {
                         data: 'ekspor',
                         name: 'ekspor',
+                        orderable: false,
                     },
                     {
                         data: 'created_at',
@@ -237,11 +239,14 @@
                             return moment(data).format(
                                 'DD-MM-YYYY'
                             );
-                        }
+                        },
+                        orderable: false,
+
                     },
                     {
                         data: 'checking',
                         name: 'checking',
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -345,6 +350,8 @@
                     });
                     form.reset();
                     $('.cuttingDatatable').DataTable().ajax.reload();
+                    $('.receiving').DataTable().ajax.reload();
+
                 }
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);

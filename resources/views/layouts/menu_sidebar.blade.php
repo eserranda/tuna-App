@@ -99,53 +99,16 @@
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/packing">
-                         <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Packing</span>
+                         <i class=" ri-inbox-archive-fill"></i> <span data-key="t-retouching">Packing</span>
                      </a>
                  </li>
 
-                 {{-- <li class="nav-item">
-                     <a class="nav-link menu-link" href="/retouching" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="retouching">
-                         <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Retouching</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="retouching">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Cutting</a>
-                             </li>
-
-                             <li class="nav-item">
-                                 <a href="pages-team.html" class="nav-link" data-key="t-team">Data</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li> --}}
-
-                 {{-- stuffing --}}
-                 {{-- <li class="nav-item">
-                     <a class="nav-link menu-link" href="/packing" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="packing">
-                         <i class="ri-luggage-cart-fill"></i> <span data-key="t-pages">Packing</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="packing">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-packing">Cutting</a>
-                             </li>
-
-                             <li class="nav-item">
-                                 <a href="pages-team.html" class="nav-link" data-key="t-team">Data</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li> --}}
-
-                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Chechking</span></li>
+                 <li class="menu-title"> <span data-key="t-pages">Chechking</span></li>
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="users">
-                         <i class="ri-pages-line"></i> <span data-key="t-users">Checking</span>
+                         <i class="ri-checkbox-line"></i> <span data-key="t-users">Checking</span>
                      </a>
                      <div class="collapse menu-dropdown" id="users">
                          <ul class="nav nav-sm flex-column">
@@ -156,6 +119,10 @@
                              </li>
                              <li class="nav-item">
                                  <a href="cutting-checking" class="nav-link" data-key="t-starter">Cutting Checking</a>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="retouching-checking" class="nav-link" data-key="t-starter">Retouching
+                                     Checking</a>
                              </li>
                          </ul>
                      </div>
@@ -177,13 +144,13 @@
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/produk">
-                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Produk</span>
+                         <i class="ri-file-list-2-line"></i> <span data-key="t-supplier">Produk</span>
                      </a>
                  </li>
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/grades">
-                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Grade</span>
+                         <i class=" ri-list-settings-line"></i> <span data-key="t-supplier">Grade</span>
                      </a>
                  </li>
 
@@ -195,50 +162,15 @@
                      <div class="collapse menu-dropdown" id="users">
                          <ul class="nav nav-sm flex-column">
                              <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter"> Starter </a>
+                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Data User</a>
                              </li>
                              <li class="nav-item">
-                                 <a href="#sidebarProfile" class="nav-link" data-bs-toggle="collapse" role="button"
-                                     aria-expanded="false" aria-controls="sidebarProfile" data-key="t-profile">
-                                     Profile
-                                 </a>
-                                 <div class="collapse menu-dropdown" id="sidebarProfile">
-                                     <ul class="nav nav-sm flex-column">
-                                         <li class="nav-item">
-                                             <a href="pages-profile.html" class="nav-link" data-key="t-simple-page">
-                                                 Simple Page </a>
-                                         </li>
-                                         <li class="nav-item">
-                                             <a href="pages-profile-settings.html" class="nav-link"
-                                                 data-key="t-settings"> Settings </a>
-                                         </li>
-                                     </ul>
-                                 </div>
+                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Role</a>
                              </li>
 
                          </ul>
                      </div>
                  </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="sidebarLanding">
-                         <i class="ri-rocket-line"></i> <span data-key="t-landing">Landing</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="sidebarLanding">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="landing.html" class="nav-link" data-key="t-one-page"> One Page </a>
-                             </li>
-
-                             <li class="nav-item">
-                                 <a href="job-landing.html" class="nav-link"><span data-key="t-job">Job</span>
-                                     <span class="badge badge-pill bg-success" data-key="t-new">New</span></a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li>
-
 
              </ul>
          </div>

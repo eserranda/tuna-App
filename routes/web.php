@@ -18,6 +18,7 @@ use App\Http\Controllers\CuttingCheckingController;
 use App\Http\Controllers\RawMaterialLotsController;
 use App\Http\Controllers\ReceivingCheckingController;
 use App\Http\Controllers\RefinedMaterialLotsController;
+use App\Http\Controllers\RetouchingCheckingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,11 @@ Route::prefix('packing')->controller(PackingController::class)->group(function (
     Route::delete('/{id}', 'destroy')->name('packing.destroy');
 
     Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('get-all-product-log');
+});
+
+Route::prefix('retouching-checking')->controller(RetouchingCheckingController::class)->group(function () {
+    Route::get('/', 'index')->name('retouching-checking.index');
+    Route::post('/update', 'update');
 });
 
 Route::prefix('cutting-checking')->controller(CuttingCheckingController::class)->group(function () {
@@ -128,7 +134,7 @@ Route::prefix('cutting')->controller(CuttingController::class)->group(function (
     Route::get('/getAllReceiving', 'getAllReceiving')->name('cutting.getAllReceiving');
     Route::post('/store', 'store')->name('cutting.store');
     Route::get('/getAll', 'getAll')->name('cutting.getAll');
-    Route::delete('/{id}', 'destroy')->name('cutting.destroy');
+    Route::delete('/{id}/{ilc}', 'destroy');
 });
 
 
