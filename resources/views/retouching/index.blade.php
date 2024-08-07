@@ -26,20 +26,18 @@
     <!--- Select 2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-
-
     <!-- Sweet Alert css-->
     <link href="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Sweet Alerts js -->
     <script src="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
-
-    <!-- Sweet alert init js-->
     <script src="{{ asset('assets') }}/js/pages/sweetalerts.init.js"></script>
 
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
     {{-- Moment.js untuk Memformat Tanggal di Frontend --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -61,17 +59,17 @@
                 <div class="row mb-0">
                     <div class="col-md-4">
                         <div class="card">
-                            <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
-                            </div>
                             <div class="card-body">
-                                <table class="table table-striped mt-0 datatableCutting" id="datatableCutting">
+                                <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
+                                <hr class="mt-2">
+                                <table class="table table-striped mt-0 datatableCutting" id="datatableCutting"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>ILC Cutting</th>
                                             <th>Ekspor</th>
-                                            <th>Opsi</th>
+                                            <th>#</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -108,7 +106,7 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="berat" class="form-label">Total Berat 4 Loin</label>
+                                            <label for="berat" class="form-label">Total Berat Loin</label>
                                             <input type="number" class="form-control bg-light" placeholder="Berat"
                                                 id="berat" name="berat" readonly>
                                             <div class="invalid-feedback">
@@ -129,7 +127,8 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Data Retouching</h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped mt-0 datatableRetouching" id="datatableRetouching">
+                                <table class="table table-striped mt-0 datatableRetouching" id="datatableRetouching"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -138,7 +137,7 @@
                                             <th>Supplier</th>
                                             <th>Ekspor</th>
                                             <th>Berat</th>
-                                            <th>Opsi</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -176,8 +175,6 @@
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);
             }
-
-
             document.getElementById('ilc_cutting').value = ilc_cutting;
         }
 
@@ -273,14 +270,18 @@
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
+                        orderable: false,
+
                     },
                     {
                         data: 'ilc_cutting',
                         name: 'ilc_cutting',
+                        orderable: false,
                     },
                     {
                         data: 'ekspor',
                         name: 'ekspor',
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -304,26 +305,37 @@
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
+                        orderable: false,
                     },
                     {
                         data: 'ilc_cutting',
                         name: 'ilc_cutting',
+                        orderable: false,
+
                     },
                     {
                         data: 'tanggal',
                         name: 'tanggal',
+                        orderable: false,
+
                     },
                     {
                         data: 'id_supplier',
                         name: 'id_supplier',
+                        orderable: false,
+
                     },
                     {
                         data: 'customer_grup',
                         name: 'customer_grup',
+                        orderable: false,
+
                     },
                     {
                         data: 'total_berat',
                         name: 'total_berat',
+                        orderable: false,
+
                     },
                     {
                         data: 'action',

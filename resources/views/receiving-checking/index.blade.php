@@ -1,14 +1,4 @@
 @extends('layouts.master')
-@section('title')
-    <h4 class="mb-sm-0">Supplier</h4>
-    <div class="page-title-right">
-        <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="javascript: void(0);">Customers</a></li>
-            <li class="breadcrumb-item active">data</li>
-        </ol>
-    </div>
-@endsection
-
 @push('head_component')
     <style>
         .dataTables_filter {
@@ -37,6 +27,7 @@
     <link href="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
     <script src="{{ asset('assets') }}/js/pages/sweetalerts.init.js"></script>
+
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
@@ -45,28 +36,42 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 @endpush
+
+@section('title')
+    <h4 class="mb-sm-0">Receiving Checking</h4>
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="javascript: void(0);">Checking</a></li>
+            <li class="breadcrumb-item active">data</li>
+        </ol>
+    </div>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-xxl-8">
             <div class="d-flex flex-column h-100">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Data Customers</h4>
-                        <div class="flex-shrink-0">
-                            <a href={{ route('customer.add') }} class="btn btn-info ">Tambah Customer</a>
-                        </div>
+                        <h4 class="card-title mb-0 flex-grow-1">Checking Data</h4>
+                        {{-- <div class="flex-shrink-0">
+                            <a href={{ route('supplier.add') }} class="btn btn-info ">Tambah Supplier</a>
+                        </div> --}}
                     </div>
                     <div class="card-body">
-                        <table class="table dataCustomer" id="datatable">
+                        <table class="table datatable table-bordered dt-responsive nowrap w-100" id="datatable"
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama</th>
-                                    <th>Kode</th>
-                                    <th>customer Group</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Alamat</th>
+                                    <th>ILC</th>
+                                    <th>Whole Check</th>
+                                    <th>Lab. Check</th>
+                                    <th>Tekstur Check</th>
+                                    <th>Bau</th>
+                                    <th>ES</th>
+                                    <th>Suhu</th>
+                                    <th>Persen</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -78,10 +83,17 @@
             </div>
         </div>
     </div>
-    </div>
+
+    @include('receiving-checking.edit')
 @endsection
 @push('scripts')
     <script>
+        function update(id, ilc) {
+            $('#updateModal').modal('show');
+            $('#updateModal').find('#id').val(id);
+            $('#updateModal').find('#ilc').val(ilc);
+        }
+
         $(document).ready(function() {
             const datatable = $('#datatable').DataTable({
                 processing: true,
@@ -90,34 +102,60 @@
                     "search": "",
                     "searchPlaceholder": "Cari Data",
                 },
-                ajax: "{{ route('customer.getAllData') }}",
+                ajax: "{{ route('receiving-checking.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
+                        orderable: false,
+
                     },
                     {
-                        data: 'nama',
-                        name: 'nama',
+                        data: 'ilc',
+                        name: 'ilc',
+                        // orderable: false,
+
                     },
                     {
-                        data: 'kode',
-                        name: 'kode',
+                        data: 'whole',
+                        name: 'whole',
+                        orderable: false,
+
                     },
                     {
-                        data: 'customer_group',
-                        name: 'customer_group',
+                        data: 'uji_lab',
+                        name: 'uji_lab',
+                        orderable: false,
+
                     },
                     {
-                        data: 'email',
-                        name: 'email',
+                        data: 'tekstur',
+                        name: 'tekstur',
+                        orderable: false,
+
                     },
                     {
-                        data: 'phone',
-                        name: 'phone',
+                        data: 'bau',
+                        name: 'bau',
+                        orderable: false,
+
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat',
+                        data: 'es',
+                        name: 'es',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'suhu',
+                        name: 'suhu',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'hasil',
+                        name: 'hasil',
+                        orderable: false,
+
                     },
                     {
                         data: 'action',
@@ -144,7 +182,7 @@
                 if (result.isConfirmed) {
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: '/customer/' + id,
+                        url: '/supplier/' + id,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken
@@ -157,7 +195,7 @@
                                     'Data berhasil dihapus.',
                                     'success'
                                 );
-                                $('#datatable').DataTable().ajax.reload();
+                                $('.dataSupplier').DataTable().ajax.reload();
                             } else {
                                 Swal.fire(
                                     'Gagal!',

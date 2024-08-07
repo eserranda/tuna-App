@@ -37,6 +37,12 @@ class CustomersController extends Controller
         return view('customer.add');
     }
 
+    public function get()
+    {
+        $suppliers = Customers::all();
+        return response()->json($suppliers);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

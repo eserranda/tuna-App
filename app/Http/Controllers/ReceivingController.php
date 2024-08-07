@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use App\Models\Receiving;
+use App\Models\ReceivingChecking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
@@ -30,8 +31,16 @@ class ReceivingController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('checking', function ($row) {
+                    if ($row->checking != "") {
+                        return ($row->checking . '%');
+                    } else {
+                        return "-";
+                    }
+                })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="hapus(\'' . $row->id  . '\', \'' . $row->ilc . '\')"><i class="text-danger ri-delete-bin-5-line mx-2"></i></a>';
+                    // $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="text-danger ri-delete-bin-5-line mx-2"></i></a>';
                     $btn .= ' <a href="/raw-material-lots/grading/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
                     return $btn;
                 })
@@ -94,6 +103,11 @@ class ReceivingController extends Controller
             'tanggal' => $request->tanggal,
         ]);
 
+        // save ilc code to receving checking table
+        ReceivingChecking::create([
+            'ilc' => $ilc
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Receiving created successfully.'
@@ -128,11 +142,13 @@ class ReceivingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Receiving $receiving, $id)
+    public function destroy(Receiving $receiving, $id, $ilc)
     {
         try {
             $del_receiving = $receiving::findOrFail($id);
             $del_receiving->delete();
+
+            ReceivingChecking::where('ilc', $ilc)->delete();
 
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {

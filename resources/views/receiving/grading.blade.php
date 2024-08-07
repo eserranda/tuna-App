@@ -29,10 +29,14 @@
     <script src="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
     <script src="{{ asset('assets') }}/js/pages/sweetalerts.init.js"></script>
 
-
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 @endpush
 
 @section('title')
@@ -70,6 +74,9 @@
                                     </div>
                                     <div class="col-sm-6">
                                         No Plat : <span class="fw-bold">{{ $data->no_plat }}</span>
+                                    </div>
+                                    <div class="col-sm-6 mt-1">
+                                        Hasil Checking : <span class="fw-bold">{{ $data->checking }}%</span>
                                     </div>
                                 </div>
                                 <hr>
@@ -131,7 +138,8 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <table class="table table-striped mt-0 datatable" id="datatable">
+                                <table class="table table-striped mt-0 datatable" id="datatable"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -159,7 +167,7 @@
     <script>
         $(document).ready(function() {
             const ilc = "{{ $data->ilc }}";
-            const myDataTable = $('.datatable').DataTable({
+            const datatable = $('.datatable').DataTable({
                 processing: true,
                 serverSide: true,
                 language: {

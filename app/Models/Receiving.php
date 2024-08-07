@@ -15,6 +15,8 @@ class Receiving extends Model
         'id_supplier',
         'no_plat',
         'tanggal',
+        'checking',
+        'used',
     ];
 
     public function supplier()

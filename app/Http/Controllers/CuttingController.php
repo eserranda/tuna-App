@@ -6,18 +6,17 @@ use App\Models\Cutting;
 use App\Models\Receiving;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\CuttingChecking;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class CuttingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('cutting.index');
     }
+
     public function getAll(Request $request)
     {
         if ($request->ajax()) {
@@ -25,9 +24,18 @@ class CuttingController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('checking', function ($row) {
+                    if ($row->checking != "") {
+                        return ($row->checking . '%');
+                    } else {
+                        return "-";
+                    }
+                })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn = '<div class="d-flex justify-content-start align-items-center">';
+                    $btn .= '<a href="javascript:void(0);"title="Hapus" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-2"></i> </a>';
                     $btn .= ' <a href="/refined-material-lots/' . $row->ilc_cutting . '"<i class="ri-arrow-right-line"></i></a>';
+                    $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -65,10 +73,11 @@ class CuttingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ilc' => 'required|string|max:255',
+            'ilc' => 'required|string|max:255|unique:cuttings,ilc',
             'ekspor' => 'required|string|max:255',
         ], [
             'ilc.required' => 'ILC harus diisi',
+            'ilc.unique' => 'ILC sudah ada',
             'ekspor.required' => 'Ekspor harus diisi',
         ]);
 
@@ -90,6 +99,10 @@ class CuttingController extends Controller
             'ilc' => $request->ilc,
             'ilc_cutting' => $ilc_cutting,
             'ekspor' => $request->ekspor,
+        ]);
+
+        CuttingChecking::create([
+            'ilc' => $request->ilc
         ]);
 
         return response()->json([

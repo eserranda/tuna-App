@@ -25,20 +25,20 @@
     </style>
     <!--- Select 2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
     <!-- Sweet Alert css-->
     <link href="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Sweet Alerts js -->
     <script src="{{ asset('assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
-
-    <!-- Sweet alert init js-->
     <script src="{{ asset('assets') }}/js/pages/sweetalerts.init.js"></script>
 
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
-    <script src="{{ asset('assets') }}/js/pages/datatables.init.js"></script>
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+    {{-- <script src="{{ asset('assets') }}/js/pages/datatables.init.js"></script> --}}
 @endpush
 @section('title')
     <h4 class="mb-sm-0">Receiving</h4>
@@ -107,13 +107,15 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Data Receiving</h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped mt-0 datatable" id="datatable">
+                                <table class="table table-striped mt-0 datatable" id="datatable"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Internal Lot Code</th>
+                                            <th>ILC</th>
                                             <th>Tanggal</th>
-                                            <th>Opsi</th>
+                                            <th>Persen</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -159,6 +161,10 @@
                     {
                         data: 'tanggal',
                         name: 'tanggal',
+                    },
+                    {
+                        data: 'checking',
+                        name: 'checking',
                     },
                     {
                         data: 'action',
@@ -229,7 +235,7 @@
             $('.nama_suppliers').select2();
         });
 
-        async function hapus(id) {
+        async function hapus(id, ilc) {
             Swal.fire({
                 title: 'Hapus Data?',
                 text: 'Data akan dihapus permanen!',
@@ -242,7 +248,7 @@
                 if (result.isConfirmed) {
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: '/receiving/' + id,
+                        url: '/receiving/' + id + '/' + ilc,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken

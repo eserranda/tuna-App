@@ -24,8 +24,8 @@ class RetouchingController extends Controller
     {
         if ($request->ajax()) {
             // $data = Retouching::all()->unique('ilc_cutting');
-            $data = Retouching::select('ilc_cutting', 'id_supplier', 'tanggal',  'customer_grup',  DB::raw('SUM(berat) as total_berat'), DB::raw('MAX(created_at) as created_at'))
-                ->groupBy('ilc_cutting', 'id_supplier', 'tanggal', 'customer_grup')
+            $data = Retouching::select('ilc', 'ilc_cutting', 'id_supplier', 'tanggal',  'customer_grup',  DB::raw('SUM(berat) as total_berat'), DB::raw('MAX(created_at) as created_at'))
+                ->groupBy('ilc', 'ilc_cutting', 'id_supplier', 'tanggal', 'customer_grup')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -56,7 +56,7 @@ class RetouchingController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
-                    $btn .= '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc_cutting . '\')"><i class="ri-arrow-right-line"></i></a>';
+                    $btn .= ' <a href="/product-log/' . $row->ilc . '"<i class="ri-arrow-right-line"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

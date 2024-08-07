@@ -47,10 +47,16 @@
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label class="form-label">Customer Group</label>
-                                        <input type="text"
-                                            class="form-control {{ $errors->has('customer_group') ? 'is-invalid' : '' }}"
-                                            placeholder="Customer Group" name="customer_group" id="customer_group"
-                                            value="{{ old('customer_group') }}">
+                                        <select
+                                            class="form-select  {{ $errors->has('customer_group') ? 'is-invalid' : '' }}"
+                                            id="customer_group" name="customer_group">
+                                            <option selected disabled>Pilih Ekspor</option>
+                                            <option value="USA">USA</option>
+                                            <option value="EROPA">EROPA</option>
+                                            <option value="JEPANG">JEPANG</option>
+                                            <option value="LOCAL">LOCAL</option>
+                                        </select>
+
                                         @if ($errors->has('customer_group'))
                                             <div class="text-danger">{{ $errors->first('customer_group') }}</div>
                                         @endif

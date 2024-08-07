@@ -14,6 +14,7 @@ class Cutting extends Model
         'ilc',
         'ilc_cutting',
         'ekspor',
+        'checking',
     ];
 
     public function supplier()

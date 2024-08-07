@@ -38,6 +38,7 @@ class RefinedMaterialLotsController extends Controller
             'persentasePenggunaan' => $persentasePenggunaan
         ]);
     }
+
     public function getAll(Request $request, $ilc_cutting)
     {
         if ($request->ajax()) {
@@ -52,6 +53,7 @@ class RefinedMaterialLotsController extends Controller
                 ->make(true);
         }
     }
+
     public function create()
     {
         //

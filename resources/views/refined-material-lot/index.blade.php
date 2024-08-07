@@ -40,6 +40,11 @@
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
     {{-- Moment.js untuk Memformat Tanggal di Frontend --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 @endpush
@@ -174,7 +179,8 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <table class="table table-striped mt-0 datatable" id="datatable">
+                                <table class="table table-striped mt-0 datatable" id="datatable"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -182,7 +188,7 @@
                                             <th>No Ikan</th>
                                             <th>No Loin</th>
                                             <th>Grade</th>
-                                            <th>Opsi</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -214,25 +220,27 @@
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
-
+                        orderable: false
                     },
                     {
                         data: 'berat',
                         name: 'berat',
-                        searchable: false
+                        orderable: false
                     },
                     {
                         data: 'no_ikan',
                         name: 'no_ikan',
+                        orderable: false
                     },
                     {
                         data: 'no_loin',
                         name: 'no_loin',
-                        searchable: false
+                        orderable: false
                     },
                     {
                         data: 'grade',
                         name: 'grade',
+                        orderable: false
                     },
                     {
                         data: 'action',

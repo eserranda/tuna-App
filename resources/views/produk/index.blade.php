@@ -40,6 +40,10 @@
     <!--- Datatable -->
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 @endpush
 @section('content')
     <div class="row">
@@ -48,8 +52,12 @@
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1">Data Produk</h4>
-                        <div class="flex-shrink-0">
+                        {{-- <div class="flex-shrink-0">
                             <a href={{ route('produk.add') }} class="btn btn-info ">Tambah Produk</a>
+                        </div> --}}
+                        <div class="flex-shrink-0">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addModal">Tambah Data</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -57,10 +65,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama</th>
                                     <th>Kode</th>
+                                    <th>Nama</th>
                                     <th>customer Group</th>
-                                    <th>Kategori</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -72,10 +79,92 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-light p-3">
+                    <h5 class="modal-title">Tambah Produk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="close-modal"></button>
+                </div>
+
+                <form id="addForm" action="{{ route('produk.store') }}" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" id="id-field" />
+                        <div class="mb-3" id="modal-id">
+                            <label for="kode" class="form-label">Kode Produk</label>
+                            <input type="text" id="kode" name="kode" class="form-control" placeholder="Kode" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Produk</label>
+                            <input type="text" id="nama" name="nama" class="form-control"
+                                placeholder="Nama Produk" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="customer_group" class="form-label">Customer Group</label>
+                            <select class="form-control" name="customer_group" id="customer_group">
+                                <option value="" selected disabled>Pilih Customer Group</option>
+                                <option value="USA">USA</option>
+                                <option value="EROPA">EROPA</option>
+                                <option value="JEPANG">JEPANG</option>
+                                <option value="LOCAL">LOCAL</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" id="add-btn">Tambah</button>
+                            <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 @push('scripts')
     <script>
+        document.getElementById('addForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            fetch('{{ route('produk.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        form.reset();
+                        $('.dataProduk').DataTable().ajax.reload();
+                        $('#addModal').modal('hide');
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan. Silahkan coba lagi.');
+                });
+        });
+
+
         $(document).ready(function() {
             const datatable = $('.dataProduk').DataTable({
                 processing: true,
@@ -90,20 +179,16 @@
                         name: 'DT_RowIndex',
                     },
                     {
-                        data: 'nama',
-                        name: 'nama',
-                    },
-                    {
                         data: 'kode',
                         name: 'kode',
                     },
                     {
-                        data: 'customer_group',
-                        name: 'customer_group',
+                        data: 'nama',
+                        name: 'nama',
                     },
                     {
-                        data: 'kategori',
-                        name: 'kategori',
+                        data: 'customer_group',
+                        name: 'customer_group',
                     },
                     {
                         data: 'action',
@@ -130,7 +215,7 @@
                 if (result.isConfirmed) {
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: '/supplier/' + id,
+                        url: '/produk/' + id,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken
@@ -143,7 +228,7 @@
                                     'Data berhasil dihapus.',
                                     'success'
                                 );
-                                $('.dataSupplier').DataTable().ajax.reload();
+                                $('.dataProduk').DataTable().ajax.reload();
                             } else {
                                 Swal.fire(
                                     'Gagal!',

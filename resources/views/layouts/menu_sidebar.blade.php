@@ -97,6 +97,12 @@
                      </a>
                  </li>
 
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/packing">
+                         <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Packing</span>
+                     </a>
+                 </li>
+
                  {{-- <li class="nav-item">
                      <a class="nav-link menu-link" href="/retouching" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="retouching">
@@ -116,7 +122,7 @@
                  </li> --}}
 
                  {{-- stuffing --}}
-                 <li class="nav-item">
+                 {{-- <li class="nav-item">
                      <a class="nav-link menu-link" href="/packing" data-bs-toggle="collapse" role="button"
                          aria-expanded="false" aria-controls="packing">
                          <i class="ri-luggage-cart-fill"></i> <span data-key="t-pages">Packing</span>
@@ -129,6 +135,27 @@
 
                              <li class="nav-item">
                                  <a href="pages-team.html" class="nav-link" data-key="t-team">Data</a>
+                             </li>
+                         </ul>
+                     </div>
+                 </li> --}}
+
+                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Chechking</span></li>
+
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
+                         aria-expanded="false" aria-controls="users">
+                         <i class="ri-pages-line"></i> <span data-key="t-users">Checking</span>
+                     </a>
+                     <div class="collapse menu-dropdown" id="users">
+                         <ul class="nav nav-sm flex-column">
+                             <li class="nav-item">
+                                 <a href="/receiving-checking" class="nav-link" data-key="t-starter">Receiving
+                                     Checking
+                                 </a>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="cutting-checking" class="nav-link" data-key="t-starter">Cutting Checking</a>
                              </li>
                          </ul>
                      </div>

@@ -47,10 +47,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 @endpush
 @section('title')
-    <h4 class="mb-sm-0">Cutting</h4>
+    <h4 class="mb-sm-0">Customer Produk</h4>
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            <li class="breadcrumb-item"><a href="javascript: void(0);">Cutting</a></li>
+            <li class="breadcrumb-item"><a href="javascript: void(0);">Packing</a></li>
             <li class="breadcrumb-item active">data</li>
         </ol>
     </div>
@@ -65,17 +65,31 @@
                     <div class="col-md-5">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Buat Receving Baru</h4>
+                                <div class="row align-items-start">
+                                    <div class="col-sm-6 mb-2">
+                                        Customer : <span class="fw-bold">{{ $data->customer->nama }}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        Produk : <span class="fw-bold"> {{ $data->produk->nama }}</span>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        Tanggal : <span class="fw-bold"> {{ $data->tanggal }}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        Kode : <span class="fw-bold">{{ $data->kode }}</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="card-body">
-                                <table class="table table-striped mt-0 receiving" id="receiving"
+                                <table class="table table-striped mt-0" id="dataTableProductLogs"
                                     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Internal Lot Code</th>
-                                            <th>Tanggal</th>
+                                            <th>ILC</th>
+                                            <th>Produk</th>
+                                            <th>Berat(kg)</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -93,7 +107,7 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Data Receiving</h4>
                             </div> --}}
                             <div class="card-body">
-                                <form id="cuttingForm">
+                                <form id="customerProdukForm">
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="berat" class="form-label">Internal Lot Code</label>
@@ -129,7 +143,7 @@
 
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Data Cutting</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Pilih Produk</h4>
                             </div>
                             <div class="card-body">
                                 <table class="table table-striped mt-0 cuttingDatatable" id="cuttingDatatable"
@@ -254,46 +268,97 @@
             });
 
 
-            const myDataTable = $('.receiving').DataTable({
-                processing: true,
-                serverSide: true,
-                language: {
-                    "search": "",
-                    "searchPlaceholder": "Cari Nomor Ikan",
-                },
-                ajax: "{{ route('cutting.getAllReceiving') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
+            $(document).ready(function() {
+                const customer_grup = "{{ $data->customer_grup }}";
+                const datatable = $('.dataProduk').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollCollapse: true,
+                    scrollY: '150px',
+                    targets: 0,
+                    language: {
+                        "search": "",
+                        "searchPlaceholder": "Cari Nama Produk",
                     },
-                    {
-                        data: 'ilc',
-                        name: 'ilc',
+                    ajax: "{{ url('/produk/productWithCustomerGroup') }}/" + customer_grup,
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama',
+                            name: 'nama',
+                            orderable: false,
+
+                        },
+                        {
+                            data: 'kode',
+                            name: 'kode',
+                            orderable: false,
+
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ],
+                    dom: 'Bftp',
+                });
+
+
+                const dataTableProductLogs = $('#dataTableProductLogs').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    language: {
+                        "search": "",
+                        "searchPlaceholder": "Cari Data Produk",
                     },
-                    {
-                        data: 'tanggal',
-                        name: 'tanggal',
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ],
-                dom: 'Bftp',
+                    ajax: "{{ route('get-all-product-log') }}",
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                        },
+                        {
+                            data: 'ilc',
+                            name: 'ilc',
+                            orderable: false,
+
+                        },
+                        {
+                            data: 'id_produk',
+                            name: 'id_produk',
+                            orderable: false,
+
+                        },
+                        {
+                            data: 'berat',
+                            name: 'berat',
+                            orderable: false,
+
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ],
+                    dom: 'Bftp',
+                });
             });
-
-
-
         });
 
         async function kodeILC(ilc) {
             document.getElementById('ilc').value = ilc;
         }
 
-        document.getElementById('cuttingForm').addEventListener('submit', async (event) => {
+        document.getElementById('customerProdukForm').addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const form = event.target;
