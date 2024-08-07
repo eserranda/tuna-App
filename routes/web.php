@@ -85,7 +85,7 @@ Route::prefix('produk')->controller(ProductsController::class)->group(function (
     Route::get('/get/{customer_group}', 'get')->name('produk.get');
 
     Route::get('/getAllData', 'getAllData')->name('produk.getAllData');
-    Route::get('/getAllDataProductLog', 'getAllDataProductLog');
+    Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('produk.get-all-product-log');
     Route::get('/productWithCustomerGroup/{customer_group}', 'productWithCustomerGroup');
 });
 

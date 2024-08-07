@@ -42,6 +42,7 @@ class ProductsController extends Controller
         return response()->json($suppliers);
     }
 
+    // tampilan data produck pada packing costuumers
     public function getAllDataProductLog(Request $request)
     {
         if ($request->ajax()) {
@@ -56,9 +57,7 @@ class ProductsController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    // $btn = '<a href="javascript:void(0);" onclick="print(\'' . $row->ilc . '\')"><i class="ri-printer-fill"></i></a>';
-                    $btn = '<a href="javascript:void(0);" onclick="print(\'' . $row->id_produk  . '\', \'' . $row->ilc . '\')"><i class="ri-printer-fill"></i></a>';
-                    $btn .= '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc . '\')"><i class="ri-arrow-right-line"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

@@ -101,6 +101,7 @@ class PackingController extends Controller
         }
     }
 
+    // tampilan data produck pada produck log
     public function getAllDataProductLog(Request $request)
     {
         if ($request->ajax()) {
@@ -115,9 +116,8 @@ class PackingController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0);" onclick="print(\'' . $row->id_produk  . '\', \'' . $row->ilc . '\')"><i class="ri-printer-fill mx-3"></i></a>';
-
-                    $btn .= '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc . '\')"><i class="ri-arrow-right-line"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="print(\'' . $row->id_produk  . '\', \'' . $row->ilc . '\')"><i class="ri-printer-fill mx-1"></i></a>';
+                    $btn .= '<a href="javascript:void(0);" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-3"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

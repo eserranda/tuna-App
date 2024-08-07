@@ -318,7 +318,7 @@
                         "search": "",
                         "searchPlaceholder": "Cari Data Produk",
                     },
-                    ajax: "{{ route('get-all-product-log') }}",
+                    ajax: "{{ route('produk.get-all-product-log') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
