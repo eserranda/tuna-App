@@ -34,7 +34,7 @@
              <ul class="navbar-nav" id="navbar-nav">
 
                  <li class="nav-item">
-                     <a class="nav-link menu-link" href="widgets.html">
+                     <a class="nav-link menu-link" href="/dashboard">
                          <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                      </a>
                  </li>
@@ -52,44 +52,6 @@
                          <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
                      </a>
                  </li>
-                 {{-- <li class="nav-item">
-                     <a class="nav-link menu-link" href="#receiving" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="receiving">
-                         <i class="ri-share-forward-2-line"></i> <span data-key="t-receiving">Receiving</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="receiving">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Receiving</a>
-                             </li>
-
-                             <li class="nav-item">
-                                 <a href="pages-team.html" class="nav-link" data-key="t-team">Data</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li> --}}
-
-                 {{--  cutting --}}
-                 {{-- <li class="nav-item">
-                     <a class="nav-link menu-link" href="#cutting" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="cutting">
-                         <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="cutting">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Cutting</a>
-                             </li>
-
-                             <li class="nav-item">
-                                 <a href="pages-team.html" class="nav-link" data-key="t-team">Data</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li> --}}
-
-                 {{-- retouching --}}
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/retouching">
@@ -122,6 +84,10 @@
                              </li>
                              <li class="nav-item">
                                  <a href="retouching-checking" class="nav-link" data-key="t-starter">Retouching
+                                     Checking</a>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="packing-checking" class="nav-link" data-key="t-starter">Packing
                                      Checking</a>
                              </li>
                          </ul>
@@ -162,10 +128,10 @@
                      <div class="collapse menu-dropdown" id="users">
                          <ul class="nav nav-sm flex-column">
                              <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Data User</a>
+                                 <a href="/users" class="nav-link" data-key="t-starter">Data User</a>
                              </li>
                              <li class="nav-item">
-                                 <a href="pages-starter.html" class="nav-link" data-key="t-starter">Role</a>
+                                 <a href="/roles" class="nav-link" data-key="t-starter">Role</a>
                              </li>
 
                          </ul>

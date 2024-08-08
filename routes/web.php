@@ -4,6 +4,8 @@ use App\Models\Cutting;
 use App\Models\Packing;
 use App\Models\ReceivingChecking;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\GradesController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\PackingController;
@@ -11,14 +13,16 @@ use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReceivingController;
 use App\Http\Controllers\ProductLogController;
 use App\Http\Controllers\RetouchingController;
 use App\Http\Controllers\CuttingCheckingController;
+use App\Http\Controllers\PackingCheckingController;
 use App\Http\Controllers\RawMaterialLotsController;
 use App\Http\Controllers\ReceivingCheckingController;
-use App\Http\Controllers\RefinedMaterialLotsController;
 use App\Http\Controllers\RetouchingCheckingController;
+use App\Http\Controllers\RefinedMaterialLotsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +39,30 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
+Route::get('login', [UserController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('login', [UserController::class, 'login'])->middleware('guest');
+
+Route::get('logout', [UserController::class, 'logout'])->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth');
+
+Route::prefix('users')->controller(UserController::class)->group(function () {
+    Route::get('/', 'index')->name('users.index');
+    Route::post('/register', 'register');
+    Route::get('/findById/{id}', 'findById');
+    Route::post('/update', 'update');
+    Route::delete('/destroy/{id}', 'destroy');
+})->middleware('auth');
+
+Route::prefix('roles')->controller(RoleController::class)->group(function () {
+    Route::get('/', 'index')->name('roles.index');
+    Route::post('/store', 'store');
+    Route::get('/findById/{id}', 'findById');
+    Route::post('/update', 'update');
+    Route::delete('/destroy/{id}', 'destroy');
+})->middleware('auth');
+
 Route::prefix('packing')->controller(PackingController::class)->group(function () {
     Route::get('/', 'index')->name('packing.index');
     Route::post('/store', 'store');
@@ -44,6 +72,11 @@ Route::prefix('packing')->controller(PackingController::class)->group(function (
     Route::delete('/{id}', 'destroy')->name('packing.destroy');
 
     Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('get-all-product-log');
+});
+
+Route::prefix('packing-checking')->controller(PackingCheckingController::class)->group(function () {
+    Route::get('/', 'index')->name('packing-checking.index');
+    Route::post('/update', 'update');
 });
 
 Route::prefix('retouching-checking')->controller(RetouchingCheckingController::class)->group(function () {
@@ -103,7 +136,6 @@ Route::prefix('customer')->controller(CustomersController::class)->group(functio
     Route::delete('/{id}', 'destroy')->name('customer.destroy');
     Route::get('/get', 'get')->name('customer.get');
 });
-
 
 Route::prefix('retouching')->controller(RetouchingController::class)->group(function () {
     Route::get('/', 'index')->name('retouching.index');

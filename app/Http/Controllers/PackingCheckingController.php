@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Retouching;
+use App\Models\Packing;
 use Illuminate\Http\Request;
-use App\Models\RetouchingChecking;
+use App\Models\PackingChecking;
 use Illuminate\Support\Facades\Validator;
 
-class RetouchingCheckingController extends Controller
+class PackingCheckingController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = RetouchingChecking::latest('created_at')->get();
+            $data = PackingChecking::latest('created_at')->get();
             return datatables()::of($data)
                 ->addIndexColumn()
                 ->addIndexColumn()
@@ -74,7 +74,6 @@ class RetouchingCheckingController extends Controller
                 })
 
                 ->addColumn('action', function ($row) {
-                    // $btn = '<a href="javascript:void(0);" onclick="update(' . $row->id . ')"><i class="ri-pencil-fill text-info"></i></a>';
                     $btn = '<a href="javascript:void(0);" onclick="update(\'' . $row->id  . '\', \'' . $row->ilc . '\')"><i class="ri-pencil-fill text-info"></i></a>';
 
                     return $btn;
@@ -86,7 +85,7 @@ class RetouchingCheckingController extends Controller
         return view('retouching-checking.index');
     }
 
-    public function update(Request $request, RetouchingChecking $retouchingChecking)
+    public function update(Request $request, PackingChecking $packingChecking)
     {
         $validator = Validator::make($request->all(), [
             'ilc' => 'required',
@@ -117,7 +116,7 @@ class RetouchingCheckingController extends Controller
         // Hitung nilai kesesuaian (hasil) dalam persentase dan bulatkan
         $nilaiKesesuaian = round(($averageX / 4) * 100, 0);
 
-        $updateReceivingChecking = RetouchingChecking::where('id', $request->id)->update([
+        $updateReceivingChecking = PackingChecking::where('id', $request->id)->update([
             'ilc' => $request->ilc,
             'uji_lab' => $request->uji_lab,
             'penampakan' => $request->penampakan,
@@ -128,7 +127,7 @@ class RetouchingCheckingController extends Controller
             'hasil' => $nilaiKesesuaian,
         ]);
 
-        $updateReceiving = Retouching::where('ilc', $request->ilc)->update([
+        $updateReceiving = Packing::where('ilc', $request->ilc)->update([
             'checking' => $nilaiKesesuaian,
         ]);
 
