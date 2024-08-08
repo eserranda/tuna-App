@@ -80,14 +80,14 @@
                                  </a>
                              </li>
                              <li class="nav-item">
-                                 <a href="cutting-checking" class="nav-link" data-key="t-starter">Cutting Checking</a>
+                                 <a href="/cutting-checking" class="nav-link" data-key="t-starter">Cutting Checking</a>
                              </li>
                              <li class="nav-item">
-                                 <a href="retouching-checking" class="nav-link" data-key="t-starter">Retouching
+                                 <a href="/retouching-checking" class="nav-link" data-key="t-starter">Retouching
                                      Checking</a>
                              </li>
                              <li class="nav-item">
-                                 <a href="packing-checking" class="nav-link" data-key="t-starter">Packing
+                                 <a href="/packing-checking" class="nav-link" data-key="t-starter">Packing
                                      Checking</a>
                              </li>
                          </ul>

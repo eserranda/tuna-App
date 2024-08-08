@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerProductController;
 use App\Models\Cutting;
 use App\Models\Packing;
 use App\Models\ReceivingChecking;
@@ -59,6 +60,13 @@ Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::post('/update', 'update');
     Route::delete('/destroy/{id}', 'destroy');
 })->middleware('auth');
+
+Route::prefix('customer-product')->controller(CustomerProductController::class)->group(function () {
+    Route::post('/store', 'store');
+    Route::get('getAllDatatable', 'getAllDatatable')->name('get-all-customer-product');
+    Route::delete('/{id}', 'destroy')->name('packing.destroy');
+})->middleware('auth');
+
 
 Route::prefix('packing')->controller(PackingController::class)->group(function () {
     Route::get('/', 'index')->name('packing.index');
@@ -121,7 +129,7 @@ Route::prefix('produk')->controller(ProductsController::class)->group(function (
     Route::get('/get/{customer_group}', 'get')->name('produk.get');
 
     Route::get('/getAllData', 'getAllData')->name('produk.getAllData');
-    Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('produk.get-all-product-log');
+    Route::get('/getAllDataProductLog/{id_product}', 'getAllDataProductLog');
     Route::get('/productWithCustomerGroup/{customer_group}', 'productWithCustomerGroup');
 })->middleware('auth');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Packing;
 use Illuminate\Http\Request;
+use App\Models\CustomerProduct;
 use App\Models\PackingChecking;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,13 +38,6 @@ class PackingCheckingController extends Controller
                         return "-";
                     }
                 })
-                ->editColumn('tekstur', function ($row) {
-                    if ($row->tekstur != "") {
-                        return $row->tekstur;
-                    } else {
-                        return "-";
-                    }
-                })
                 ->editColumn('bau', function ($row) {
                     if ($row->bau != "") {
                         return $row->bau;
@@ -65,6 +59,20 @@ class PackingCheckingController extends Controller
                         return "-";
                     }
                 })
+                ->editColumn('parasite', function ($row) {
+                    if ($row->parasite != "") {
+                        return $row->parasite;
+                    } else {
+                        return "-";
+                    }
+                })
+                ->editColumn('label', function ($row) {
+                    if ($row->label != "") {
+                        return $row->label;
+                    } else {
+                        return "-";
+                    }
+                })
                 ->editColumn('hasil', function ($row) {
                     if ($row->hasil != "") {
                         return ($row->hasil . '%');
@@ -82,7 +90,7 @@ class PackingCheckingController extends Controller
                 ->make(true);
         }
 
-        return view('retouching-checking.index');
+        return view('packing-checking.index');
     }
 
     public function update(Request $request, PackingChecking $packingChecking)
@@ -91,10 +99,11 @@ class PackingCheckingController extends Controller
             'ilc' => 'required',
             'uji_lab' => 'required|numeric|min:0|max:4',
             'penampakan' => 'required|numeric|min:0|max:4',
-            'tekstur' => 'required|numeric|min:0|max:4',
             'bau' => 'required|numeric|min:0|max:4',
             'es' => 'required|numeric|min:0|max:4',
             'suhu' => 'required|numeric|min:0|max:4',
+            'parasite' => 'required|numeric|min:0|max:4',
+            'label' => 'required|numeric|min:0|max:4',
         ], [
             'required' => 'Nilai :attribute harus diisi.',
         ]);
@@ -120,14 +129,15 @@ class PackingCheckingController extends Controller
             'ilc' => $request->ilc,
             'uji_lab' => $request->uji_lab,
             'penampakan' => $request->penampakan,
-            'tekstur' => $request->tekstur,
             'bau' => $request->bau,
             'es' => $request->es,
             'suhu' => $request->suhu,
+            'parasite' => $request->parasite,
+            'label' => $request->label,
             'hasil' => $nilaiKesesuaian,
         ]);
 
-        $updateReceiving = Packing::where('ilc', $request->ilc)->update([
+        $updateReceiving = CustomerProduct::where('ilc', $request->ilc)->update([
             'checking' => $nilaiKesesuaian,
         ]);
 

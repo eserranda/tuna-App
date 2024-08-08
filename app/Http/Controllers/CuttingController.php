@@ -144,8 +144,8 @@ class CuttingController extends Controller
     public function destroy(Cutting $cutting, $id, $ilc)
     {
         try {
-            $del_siswa = $cutting::findOrFail($id);
-            $del_siswa->delete();
+            $del = $cutting::findOrFail($id);
+            $del->delete();
 
             Receiving::where('ilc', $ilc)->update([
                 'used' => false

@@ -30,9 +30,14 @@
                 <div class="row mb-0">
                     <div class="col-md-12">
                         <div class="card">
+                            <div class="card-header align-items-center d-flex">
+                                <h4 class="card-title mb-0 flex-grow-1">Data Users</h4>
+                                <div class="flex-shrink-0">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#addModal">Tambah Data</button>
+                                </div>
+                            </div>
                             <div class="card-body">
-                                <h4 class="card-title mb-0 flex-grow-1">Data User</h4>
-                                <hr class="mt-2">
                                 <table class="table table-striped mt-0" id="datatable"
                                     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
@@ -57,10 +62,28 @@
             </div>
         </div>
     </div>
+
+    @include('users.add')
+    @include('users.edit')
 @endsection
 
 @push('scripts')
     <script>
+        function edit(id) {
+            fetch('/users/findById/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('edit_id').value = data.id;
+                    document.getElementById('edit_name').value = data.name;
+                    document.getElementById('edit_username').value = data.username;
+                    document.getElementById('edit_email').value = data.email;
+                    // document.getElementById('edit_roles').value = data.roles;
+                })
+                .catch(error => console.error(error));
+            // show modal edit
+            $('#editModal').modal('show');
+        }
+
         var datatable;
         $(document).ready(function() {
             datatable = $('#datatable').DataTable({

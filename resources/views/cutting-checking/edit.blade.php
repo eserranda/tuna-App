@@ -15,7 +15,7 @@
                             <div>
                                 <input type="hidden" id="id" name="id">
                                 <input type="hidden" id="ilc" name="ilc">
-                                <label class="form-label">Whole Check</label>
+                                <label class="form-label">Penampakan</label>
                                 <select class="form-select" id="whole" name="whole">
                                     <option selected disabled>pilih</option>
                                     <option value="1">1</option>

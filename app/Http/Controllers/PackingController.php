@@ -40,7 +40,7 @@ class PackingController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="d-flex justify-content-start align-items-center">';
-                    $btn .= '<a href="javascript:void(0);"title="Hapus" onclick="hapus(' . $row->id . ')"><i class="ri-delete-bin-5-line mx-2"></i> </a>';
+                    $btn .= '<a href="javascript:void(0);"title="Hapus" onclick="hapus(' . $row->id . ')"><i class="text-danger ri-delete-bin-5-line mx-2"></i> </a>';
                     $btn .= ' <a href="/packing/customer-produk/' . $row->id_customer . '/' . $row->id_produk . '" "<i class="ri-arrow-right-line"></i></a>';
                     $btn .= '</div>';
                     return $btn;

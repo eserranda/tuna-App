@@ -63,7 +63,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>ILC</th>
-                                    <th>Whole Check</th>
+                                    <th>Penampakan</th>
                                     <th>Lab. Check</th>
                                     <th>Tekstur Check</th>
                                     <th>Bau</th>

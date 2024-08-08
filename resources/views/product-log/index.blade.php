@@ -139,8 +139,8 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Produk</th>
-                                            <th>No Ikan</th>
-                                            <th>Berat</th>
+                                            <th>Customer</th>
+                                            <th>Total Berat</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -315,8 +315,8 @@
 
                     },
                     {
-                        data: 'no_ikan',
-                        name: 'no_ikan',
+                        data: 'customer_group',
+                        name: 'customer_group',
                         orderable: false,
 
                     },

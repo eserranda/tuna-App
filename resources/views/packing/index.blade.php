@@ -57,7 +57,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Buat data packing</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Pilih Customer dan Product</h4>
                             </div>
                             <div class="card-body">
                                 <form id="addForm">

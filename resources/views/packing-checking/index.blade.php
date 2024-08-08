@@ -67,10 +67,11 @@
                                     <th>ILC</th>
                                     <th>Lab. Check</th>
                                     <th>Penampakan</th>
-                                    <th>Tekstur</th>
                                     <th>Bau</th>
                                     <th>Es</th>
                                     <th>Suhu</th>
+                                    <th>Parasite</th>
+                                    <th>Label</th>
                                     <th>Persen</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -84,7 +85,7 @@
         </div>
     </div>
 
-    @include('retouching-checking.edit')
+    @include('packing-checking.edit')
 @endsection
 @push('scripts')
     <script>
@@ -102,7 +103,7 @@
                     "search": "",
                     "searchPlaceholder": "Cari Data",
                 },
-                ajax: "{{ route('retouching-checking.index') }}",
+                ajax: "{{ route('packing-checking.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -127,12 +128,6 @@
 
                     },
                     {
-                        data: 'tekstur',
-                        name: 'tekstur',
-                        orderable: false,
-
-                    },
-                    {
                         data: 'bau',
                         name: 'bau',
                         orderable: false,
@@ -146,6 +141,16 @@
                     {
                         data: 'suhu',
                         name: 'suhu',
+                        orderable: false,
+                    },
+                    {
+                        data: 'parasite',
+                        name: 'parasite',
+                        orderable: false,
+                    },
+                    {
+                        data: 'label',
+                        name: 'label',
                         orderable: false,
                     },
                     {

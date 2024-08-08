@@ -41,19 +41,6 @@
                             </div>
                         </div>
                         <!--end col-->
-                        <div class="col-xxl-3 col-md-6">
-                            <div>
-                                <label class="form-label">Tekstur Check</label>
-                                <select class="form-select" id="tekstur" name="tekstur">
-                                    <option selected disabled>pilih</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                </select>
-                                <div class="invalid-feedback"></div>
-                            </div>
-                        </div>
                         <!--end col-->
                         <div class="col-xxl-3 col-md-6">
                             <div>
@@ -96,6 +83,32 @@
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
+                        <div class="col-xxl-3 col-md-6">
+                            <div>
+                                <label class="form-label">Parasite</label>
+                                <select class="form-select" id="parasite" name="parasite">
+                                    <option selected disabled>pilih</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-md-6">
+                            <div>
+                                <label class="form-label">Label</label>
+                                <select class="form-select" id="label" name="label">
+                                    <option selected disabled>pilih</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mt-4">
                         {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
@@ -116,7 +129,7 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
             try {
-                const response = await fetch('/retouching-checking/update', {
+                const response = await fetch('/packing-checking/update', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

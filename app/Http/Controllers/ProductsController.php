@@ -43,10 +43,10 @@ class ProductsController extends Controller
     }
 
     // tampilan data produck pada packing costuumers
-    public function getAllDataProductLog(Request $request)
+    public function getAllDataProductLog(Request $request, $id_produk)
     {
         if ($request->ajax()) {
-            $data = ProductLog::latest('created_at')->get();
+            $data = ProductLog::where('id_produk', $id_produk)->latest('created_at')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_produk', function ($row) {
@@ -57,7 +57,7 @@ class ProductsController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc . '\')"><i class="ri-arrow-right-line"></i></a>';
+                    $btn = '<a href="javascript:void(0);" onclick="kodeILC(\'' . $row->ilc . '\',  \'' . $row->berat . '\')"><i class="ri-arrow-right-line"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

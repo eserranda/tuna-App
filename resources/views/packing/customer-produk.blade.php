@@ -89,7 +89,7 @@
                                             <th>No</th>
                                             <th>ILC</th>
                                             <th>Produk</th>
-                                            <th>Berat(kg)</th>
+                                            <th>Berat</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -107,33 +107,24 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Data Receiving</h4>
                             </div> --}}
                             <div class="card-body">
-                                <form id="customerProdukForm">
+                                <form id="customerPackingProductForm">
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="berat" class="form-label">Internal Lot Code</label>
                                             <input type="text" class="form-control bg-light"
                                                 placeholder="Internal Lot Code" id="ilc" name="ilc" readonly>
-                                            <div class="invalid-feedback">
-                                            </div>
+                                            <div class="invalid-feedback"> </div>
                                         </div>
                                         <div class="col-6 mb-2">
-                                            <label for="no_ikan" class="form-label">Ekspor</label>
-                                            <select class="form-select" id="ekspor" name="ekspor">
-                                                <option selected disabled>Pilih Ekspor</option>
-                                                <option value="USA">USA</option>
-                                                <option value="EROPA">EROPA</option>
-                                                <option value="JEPANG">JEPANG</option>
-                                                <option value="LOCAL">LOCAL</option>
-                                            </select>
-                                            {{-- <input type="text" class="form-control" placeholder="Ekspor"
-                                                    id="ekspor" name="ekspor"> --}}
-                                            <div class="invalid-feedback">
-                                            </div>
+                                            <label for="berat" class="form-label">Berat (Kg)</label>
+                                            <input type="text" class="form-control bg-light" placeholder="Berat"
+                                                id="berat" name="berat" readonly>
+                                            <div class="invalid-feedback"> </div>
                                         </div>
 
                                         <div class="col-lg-12">
                                             <div class="text-start">
-                                                <button type="submit" class="btn btn-primary">Buat Cutting</button>
+                                                <button type="submit" class="btn btn-primary">Packing</button>
                                             </div>
                                         </div>
                                     </div>
@@ -143,16 +134,20 @@
 
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Pilih Produk</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Produk yang telah di packing untuk Customers
+                                    <span class="fw-bold">
+                                        {{ $data->customer->nama }}
+                                    </span>
+                                </h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped mt-0 cuttingDatatable" id="cuttingDatatable"
+                                <table class="table table-striped mt-0 " id="costumerProdukDatatable"
                                     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>ILC</th>
-                                            <th>Ekspor</th>
+                                            <th>Produk</th>
                                             <th>Tanggal</th>
                                             <th>Persen</th>
                                             <th>Opsi</th>
@@ -187,7 +182,7 @@
                 if (result.isConfirmed) {
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: '/cutting/' + id,
+                        url: '/customer-product/' + id,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken
@@ -200,7 +195,7 @@
                                     'Data berhasil dihapus.',
                                     'success'
                                 );
-                                $('.cuttingDatatable').DataTable().ajax.reload();
+                                $('#costumerProdukDatatable').DataTable().ajax.reload();
                             } else {
                                 Swal.fire(
                                     'Gagal!',
@@ -222,36 +217,74 @@
             });
         }
 
+
         $(document).ready(function() {
-            const cuttingDataTable = $('.cuttingDatatable').DataTable({
+            const id_produk = "{{ $data->id_produk }}";
+            const dataTableProductLogs = $('#dataTableProductLogs').DataTable({
+                processing: true,
+                serverSide: true,
+                language: {
+                    "search": "",
+                    "searchPlaceholder": "Cari Data Produk",
+                },
+                ajax: "{{ url('/produk/getAllDataProductLog') }}/" + id_produk,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                    },
+                    {
+                        data: 'ilc',
+                        name: 'ilc',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'id_produk',
+                        name: 'id_produk',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'berat',
+                        name: 'berat',
+                        orderable: false,
+
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
+                dom: 'Bftp',
+            });
+
+            const cuttingDataTable = $('#costumerProdukDatatable').DataTable({
                 processing: true,
                 serverSide: true,
                 language: {
                     "search": "",
                     "searchPlaceholder": "Cari Data Cutting",
                 },
-                ajax: "{{ route('cutting.getAll') }}",
+                ajax: "{{ route('get-all-customer-product') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
 
                     },
                     {
-                        data: 'ilc_cutting',
-                        name: 'ilc_cutting',
+                        data: 'id_produk',
+                        name: 'id_produk',
                     },
                     {
-                        data: 'ekspor',
-                        name: 'ekspor',
+                        data: 'berat',
+                        name: 'berat',
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
-                        render: function(data, type, row) {
-                            return moment(data).format(
-                                'DD-MM-YYYY'
-                            );
-                        }
+                        data: 'tanggal',
+                        name: 'tanggal',
                     },
                     {
                         data: 'checking',
@@ -267,106 +300,32 @@
                 dom: 'Bftp',
             });
 
-
-            $(document).ready(function() {
-                const customer_grup = "{{ $data->customer_grup }}";
-                const datatable = $('.dataProduk').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    paging: false,
-                    scrollCollapse: true,
-                    scrollY: '150px',
-                    targets: 0,
-                    language: {
-                        "search": "",
-                        "searchPlaceholder": "Cari Nama Produk",
-                    },
-                    ajax: "{{ url('/produk/productWithCustomerGroup') }}/" + customer_grup,
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            orderable: false,
-                            searchable: false
-                        },
-                        {
-                            data: 'nama',
-                            name: 'nama',
-                            orderable: false,
-
-                        },
-                        {
-                            data: 'kode',
-                            name: 'kode',
-                            orderable: false,
-
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ],
-                    dom: 'Bftp',
-                });
-
-
-                const dataTableProductLogs = $('#dataTableProductLogs').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    language: {
-                        "search": "",
-                        "searchPlaceholder": "Cari Data Produk",
-                    },
-                    ajax: "{{ route('produk.get-all-product-log') }}",
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            orderable: false,
-                        },
-                        {
-                            data: 'ilc',
-                            name: 'ilc',
-                            orderable: false,
-
-                        },
-                        {
-                            data: 'id_produk',
-                            name: 'id_produk',
-                            orderable: false,
-
-                        },
-                        {
-                            data: 'berat',
-                            name: 'berat',
-                            orderable: false,
-
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ],
-                    dom: 'Bftp',
-                });
-            });
         });
 
-        async function kodeILC(ilc) {
+        async function kodeILC(ilc, berat) {
             document.getElementById('ilc').value = ilc;
+            document.getElementById('berat').value = berat;
         }
 
-        document.getElementById('customerProdukForm').addEventListener('submit', async (event) => {
+        document.getElementById('customerPackingProductForm').addEventListener('submit', async (event) => {
             event.preventDefault();
+
+            ilc = document.getElementById('ilc').value;
+            berat = document.getElementById('berat').value;
+            id_customer = {{ $data->id_customer }};
+            id_produk = {{ $data->id_produk }}
 
             const form = event.target;
             const formData = new FormData(form);
 
+            formData.append('ilc', ilc); // menambahkan ilc ke formData
+            formData.append('berat', berat); // menambahkan berat ke formData
+            formData.append('id_customer', id_customer); // menambahkan id_customer ke formData
+            formData.append('id_produk', id_produk); // menambahkan id_produk ke formData
+
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             try {
-                const response = await fetch('{{ route('cutting.store') }}', {
+                const response = await fetch('/customer-product/store', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -409,7 +368,7 @@
                         }
                     });
                     form.reset();
-                    $('.cuttingDatatable').DataTable().ajax.reload();
+                    $('#costumerProdukDatatable').DataTable().ajax.reload();
                 }
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);

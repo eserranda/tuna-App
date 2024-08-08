@@ -56,6 +56,17 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,name',
+        ], [
+            'required' => ':attribute harus diisi',
+            'unique' => ':attribute sudah ada',
+            'min' => ':attribute minimal :min karakter',
+            'confirmed' => ':attribute tidak cocok',
+            'exists' => ':attribute tidak ada',
+            'roles.*' => ':attribute tidak ada',
+            'string' => ':attribute harus berupa string',
+            'email' => ':attribute harus berupa email',
+            'max' => ':attribute maksimal :max karakter',
+            'confirmed' => ':attribute tidak cocok',
         ]);
 
         if ($validator->fails()) {
