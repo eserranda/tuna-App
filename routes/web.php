@@ -72,27 +72,27 @@ Route::prefix('packing')->controller(PackingController::class)->group(function (
     Route::delete('/{id}', 'destroy')->name('packing.destroy');
 
     Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('get-all-product-log');
-});
+})->middleware('auth');
 
 Route::prefix('packing-checking')->controller(PackingCheckingController::class)->group(function () {
     Route::get('/', 'index')->name('packing-checking.index');
     Route::post('/update', 'update');
-});
+})->middleware('auth');
 
 Route::prefix('retouching-checking')->controller(RetouchingCheckingController::class)->group(function () {
     Route::get('/', 'index')->name('retouching-checking.index');
     Route::post('/update', 'update');
-});
+})->middleware('auth');
 
 Route::prefix('cutting-checking')->controller(CuttingCheckingController::class)->group(function () {
     Route::get('/', 'index')->name('cutting-checking.index');
     Route::post('/update', 'update');
-});
+})->middleware('auth');
 
 Route::prefix('receiving-checking')->controller(ReceivingCheckingController::class)->group(function () {
     Route::get('/', 'index')->name('receiving-checking.index');
     Route::post('/update', 'update');
-});
+})->middleware('auth');
 
 
 Route::prefix('product-log')->controller(ProductLogController::class)->group(function () {
@@ -101,11 +101,11 @@ Route::prefix('product-log')->controller(ProductLogController::class)->group(fun
     // Route::get('/', 'index')->name('grades.index');
     // Route::get('/getAll', 'getAll')->name('grades.getAll');
     Route::delete('/{id}', 'destroy')->name('grades.destroy');
-});
+})->middleware('auth');
 
 Route::prefix('print')->controller(PrinterController::class)->group(function () {
     Route::get('/product-log-print/{id_product}/{ilc}', 'productLogPrint');
-});
+})->middleware('auth');
 
 Route::prefix('grades')->controller(GradesController::class)->group(function () {
     Route::get('/', 'index')->name('grades.index');
@@ -113,7 +113,7 @@ Route::prefix('grades')->controller(GradesController::class)->group(function () 
     Route::get('/getAll', 'getAll')->name('grades.getAll');
     Route::get('/getAllData', 'getAllData')->name('grades.getAllData');
     Route::delete('/{id}', 'destroy')->name('grades.destroy');
-});
+})->middleware('auth');
 
 Route::prefix('produk')->controller(ProductsController::class)->group(function () {
     Route::get('/', 'index')->name('produk.index');
@@ -126,7 +126,7 @@ Route::prefix('produk')->controller(ProductsController::class)->group(function (
     Route::get('/getAllData', 'getAllData')->name('produk.getAllData');
     Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('produk.get-all-product-log');
     Route::get('/productWithCustomerGroup/{customer_group}', 'productWithCustomerGroup');
-});
+})->middleware('auth');
 
 Route::prefix('customer')->controller(CustomersController::class)->group(function () {
     Route::get('/', 'index')->name('customer.index');
@@ -135,7 +135,7 @@ Route::prefix('customer')->controller(CustomersController::class)->group(functio
     Route::post('/store', 'store')->name('customer.store');
     Route::delete('/{id}', 'destroy')->name('customer.destroy');
     Route::get('/get', 'get')->name('customer.get');
-});
+})->middleware('auth');
 
 Route::prefix('retouching')->controller(RetouchingController::class)->group(function () {
     Route::get('/', 'index')->name('retouching.index');
@@ -147,7 +147,7 @@ Route::prefix('retouching')->controller(RetouchingController::class)->group(func
     Route::get('/getNoIkan/{ilc_cutting}', 'getNoIkan')->name('retouching.getNoIkan');
 
     Route::get('/calculateLoin/{ilc_cutting}/{no_ikan}', 'calculateLoin')->name('retouching.calculateLoin');
-});
+})->middleware('auth');
 
 Route::prefix('refined-material-lots')->controller(RefinedMaterialLotsController::class)->group(function () {
     Route::get('/{ilc_cutting}', 'index')->name('refined_material_lots.index');
@@ -157,9 +157,7 @@ Route::prefix('refined-material-lots')->controller(RefinedMaterialLotsController
     Route::delete('/{id}', 'destroy')->name('refined_material_lots.destroy');
 
     Route::get('/calculateTotalWeight/{ilc}', 'calculateTotalWeight')->name('refined_material_lots.calculateTotalWeight');
-
-    // Route::get('/getAllReceiving', 'getAllReceiving')->name('cutting.getAllReceiving');
-});
+})->middleware('auth');
 
 Route::prefix('cutting')->controller(CuttingController::class)->group(function () {
     Route::get('/', 'index')->name('cutting.index');
@@ -167,8 +165,7 @@ Route::prefix('cutting')->controller(CuttingController::class)->group(function (
     Route::post('/store', 'store')->name('cutting.store');
     Route::get('/getAll', 'getAll')->name('cutting.getAll');
     Route::delete('/{id}/{ilc}', 'destroy');
-});
-
+})->middleware('auth');
 
 Route::prefix('raw-material-lots')->controller(RawMaterialLotsController::class)->group(function () {
     Route::get('/', 'index')->name('raw_material_lots.index');
@@ -181,21 +178,18 @@ Route::prefix('raw-material-lots')->controller(RawMaterialLotsController::class)
 
     Route::get('/calculateTotalWeight/{ilc}', 'calculateTotalWeight')->name('raw_material_lots.calculateTotalWeight');
 
-
     // belum di pakai 
     Route::get('/get', 'get')->name('raw_material_lots.get');
     Route::get('/create', 'create')->name('raw_material_lots.create');
     Route::get('/{rawMaterialLots}', 'show')->name('raw_material_lots.show');
     Route::get('/{rawMaterialLots}/edit', 'edit')->name('raw_material_lots.edit');
     Route::put('/{rawMaterialLots}', 'update')->name('raw_material_lots.update');
-});
+})->middleware('auth');
 
 Route::prefix('receiving')->controller(ReceivingController::class)->group(function () {
     Route::get('/', 'index')->name('receiving.index');
     Route::get('/getAll', 'getAll')->name('receiving.getAll');
     Route::delete('/{id}/{ilc}', 'destroy')->name('receiving.destroy');
-    // Route::get('/grading/{ilc}', 'grading')->name('receiving.grading');
-
 
     // belum di pakai 
     Route::get('/create', 'create')->name('receiving.create');
@@ -203,7 +197,7 @@ Route::prefix('receiving')->controller(ReceivingController::class)->group(functi
     Route::get('/{receiving}', 'show')->name('receiving.show');
     Route::get('/{receiving}/edit', 'edit')->name('receiving.edit');
     Route::put('/{receiving}', 'update')->name('receiving.update');
-});
+})->middleware('auth');
 
 
 Route::prefix('supplier')->controller(SupplierController::class)->group(function () {
@@ -219,4 +213,4 @@ Route::prefix('supplier')->controller(SupplierController::class)->group(function
     Route::get('/{supplier}', 'show')->name('supplier.show');
     Route::get('/{supplier}/edit', 'edit')->name('supplier.edit');
     Route::put('/{supplier}', 'update')->name('supplier.update');
-});
+})->middleware('auth');
