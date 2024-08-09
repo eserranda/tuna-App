@@ -58,10 +58,10 @@ class CustomerProductController extends Controller
     }
 
 
-    public function getAllDatatable(Request $request)
+    public function getAllDatatable(Request $request, $id_customer)
     {
         if ($request->ajax()) {
-            $data = CustomerProduct::latest('created_at')->get();
+            $data = CustomerProduct::where('id_customer', $id_customer)->latest('created_at')->get();
             return datatables()::of($data)
                 ->addIndexColumn()
                 ->editColumn('tanggal', function ($row) {
@@ -83,25 +83,7 @@ class CustomerProductController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CustomerProduct $customerProduct)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CustomerProduct $customerProduct)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(CustomerProduct $customerProduct, $id)
     {
         try {

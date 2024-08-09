@@ -63,7 +63,7 @@ Route::prefix('roles')->controller(RoleController::class)->group(function () {
 
 Route::prefix('customer-product')->controller(CustomerProductController::class)->group(function () {
     Route::post('/store', 'store');
-    Route::get('getAllDatatable', 'getAllDatatable')->name('get-all-customer-product');
+    Route::get('getAllDatatable/{id_customer}', 'getAllDatatable');
     Route::delete('/{id}', 'destroy')->name('packing.destroy');
 })->middleware('auth');
 
@@ -110,6 +110,7 @@ Route::prefix('product-log')->controller(ProductLogController::class)->group(fun
 
 Route::prefix('print')->controller(PrinterController::class)->group(function () {
     Route::get('/product-log-print/{id_product}/{ilc}', 'productLogPrint');
+    Route::get('/print-label-packing/{id_customer}/{id_product}/{kode}', 'printLabelPacking');
 })->middleware('auth');
 
 Route::prefix('grades')->controller(GradesController::class)->group(function () {

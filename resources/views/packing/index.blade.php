@@ -54,7 +54,7 @@
         <div class="col-xxl-8">
             <div class="d-flex flex-column h-100">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Pilih Customer dan Product</h4>
@@ -98,7 +98,7 @@
 
                                         <div class="col-6">
                                             <div class="mb-3">
-                                                <label for="kode" class="form-label">Kode</label>
+                                                <label for="kode" class="form-label">Kode Packing</label>
                                                 <input type="text" class="form-control" placeholder="kode" id="kode"
                                                     name="kode">
                                                 <div class="invalid-feedback"> </div>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Data Packing Customers</h4>
@@ -151,6 +151,26 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('assets') }}/js/pages/select2.init.js"></script>
     <script>
+        async function printLabelPacking(id_customer, id_produk, kode) {
+            try {
+                const response = await fetch('/print/print-label-packing/' + id_customer + '/' + id_produk + '/' +
+                    kode, {
+                        method: 'GET',
+                    });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+
+                // const data = await response.json();
+
+                console.log(data);
+            } catch (error) {
+                console.error('Fetch error: ', error);
+            }
+        }
+
+
         document.getElementById('addForm').addEventListener('submit', async (event) => {
             event.preventDefault();
             const form = event.target;

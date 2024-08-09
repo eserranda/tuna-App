@@ -147,7 +147,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>ILC</th>
-                                            <th>Produk</th>
+                                            <th>Berat</th>
                                             <th>Tanggal</th>
                                             <th>Persen</th>
                                             <th>Opsi</th>
@@ -268,15 +268,15 @@
                     "search": "",
                     "searchPlaceholder": "Cari Data Cutting",
                 },
-                ajax: "{{ route('get-all-customer-product') }}",
+                ajax: "/customer-product/getAllDatatable/{{ $data->id_customer }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
 
                     },
                     {
-                        data: 'id_produk',
-                        name: 'id_produk',
+                        data: 'ilc',
+                        name: 'ilc',
                     },
                     {
                         data: 'berat',

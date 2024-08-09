@@ -96,7 +96,6 @@ class PackingCheckingController extends Controller
     public function update(Request $request, PackingChecking $packingChecking)
     {
         $validator = Validator::make($request->all(), [
-            'ilc' => 'required',
             'uji_lab' => 'required|numeric|min:0|max:4',
             'penampakan' => 'required|numeric|min:0|max:4',
             'bau' => 'required|numeric|min:0|max:4',
