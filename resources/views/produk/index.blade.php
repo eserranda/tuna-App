@@ -232,7 +232,7 @@
                             } else {
                                 Swal.fire(
                                     'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data guru.',
+                                    'Terjadi kesalahan saat menghapus data.',
                                     'error'
                                 );
                             }
@@ -241,7 +241,7 @@
                             console.log(error);
                             Swal.fire(
                                 'Gagal!',
-                                'Terjadi kesalahan saat menghapus data guru.',
+                                'Terjadi kesalahan saat menghapus data.',
                                 'error'
                             );
                         }

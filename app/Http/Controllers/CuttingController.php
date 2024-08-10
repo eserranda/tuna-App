@@ -46,7 +46,9 @@ class CuttingController extends Controller
     public function getAllReceiving(Request $request)
     {
         if ($request->ajax()) {
-            $data = Receiving::where('used', 0)->latest('created_at')->get();
+            $data = Receiving::where('used', 0)
+                ->where('checking', '>=', 75)
+                ->latest('created_at')->get();
             $data->transform(function ($item) {
                 $item->tanggal = Carbon::parse($item->tanggal)->format('d-m-Y');
                 return $item;

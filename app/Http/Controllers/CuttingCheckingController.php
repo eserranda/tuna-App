@@ -119,11 +119,15 @@ class CuttingCheckingController extends Controller
             'suhu' => $request->suhu,
             'hasil' => $nilaiKesesuaian,
         ]);
-        $updateReceiving = Cutting::where('ilc', $request->ilc)->update([
-            'checking' => $nilaiKesesuaian,
-        ]);
 
-        if (($updateReceiving) && ($update)) {
+        $getDataCutting = Cutting::where('ilc', $request->ilc)->first('checking');
+        if ($getDataCutting != null) {
+            Cutting::where('ilc', $request->ilc)->update([
+                'checking' => $nilaiKesesuaian,
+            ]);
+        }
+
+        if ($update) {
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diupdate',

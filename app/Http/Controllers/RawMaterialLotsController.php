@@ -92,6 +92,17 @@ class RawMaterialLotsController extends Controller
             'grade.required' => 'Grade Wajib Diisi',
         ]);
 
+        $validator->after(function ($validator) use ($request) {
+            $existingEntry = RawMaterialLots::where('ilc', $request->ilc)
+                ->where('no_ikan', $request->no_ikan)
+                ->exists();
+
+            if ($existingEntry) {
+                $validator->errors()->add('no_ikan', 'Nomor Ikan sudah ada.');
+                // $validator->errors()->add('ilc', 'Ilc sudah ada.');
+            }
+        });
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
