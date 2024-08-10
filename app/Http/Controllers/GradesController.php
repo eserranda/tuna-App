@@ -79,8 +79,8 @@ class GradesController extends Controller
     public function destroy(Grades $grades, $id)
     {
         try {
-            $del_siswa = $grades::findOrFail($id);
-            $del_siswa->delete();
+            $del = $grades::findOrFail($id);
+            $del->delete();
 
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {

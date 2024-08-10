@@ -65,6 +65,12 @@
                      </a>
                  </li>
 
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/byproduct">
+                         <i class="ri-recycle-fill"></i> <span data-key="t-retouching">Byproduct</span>
+                     </a>
+                 </li>
+
                  <li class="menu-title"> <span data-key="t-pages">Chechking</span></li>
 
                  <li class="nav-item">

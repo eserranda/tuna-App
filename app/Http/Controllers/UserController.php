@@ -167,8 +167,8 @@ class UserController extends Controller
     public function destroy(User $users, $id)
     {
         try {
-            $del_siswa = $users::findOrFail($id);
-            $del_siswa->delete();
+            $del = $users::findOrFail($id);
+            $del->delete();
 
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {

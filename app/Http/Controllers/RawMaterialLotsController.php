@@ -142,8 +142,8 @@ class RawMaterialLotsController extends Controller
     public function destroy(RawMaterialLots $rawMaterialLots, $id)
     {
         try {
-            $del_siswa = $rawMaterialLots::findOrFail($id);
-            $del_siswa->delete();
+            $del = $rawMaterialLots::findOrFail($id);
+            $del->delete();
 
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {

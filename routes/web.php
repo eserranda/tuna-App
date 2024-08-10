@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CustomerProductController;
 use App\Models\Cutting;
 use App\Models\Packing;
 use App\Models\ReceivingChecking;
@@ -13,11 +12,13 @@ use App\Http\Controllers\PackingController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ByproductController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReceivingController;
 use App\Http\Controllers\ProductLogController;
 use App\Http\Controllers\RetouchingController;
+use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\CuttingCheckingController;
 use App\Http\Controllers\PackingCheckingController;
 use App\Http\Controllers\RawMaterialLotsController;
@@ -44,6 +45,19 @@ Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth');
+
+
+Route::prefix('byproduct')->controller(ByproductController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/GetAllDataReceiving', 'getAllDataReceiving')->name('byproduct.get-all-receiving');
+    Route::post('/store', 'store')->name('byproduct.store');
+    Route::get('/getAll', 'getAll')->name('byproduct.getAll');
+    // Route::post('/update', 'update');
+    // Route::get('/customer-produk/{id_customer}/{id_produk}', 'customerProduk');
+    Route::delete('/{id}', 'destroy');
+
+    // Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('get-all-product-log');
+})->middleware('auth');
 
 Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name('users.index');
