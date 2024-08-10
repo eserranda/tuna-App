@@ -76,6 +76,12 @@ class RetouchingController extends Controller
         }
     }
 
+    public function getBerat($ilc, $no_ikan)
+    {
+        $berat = Retouching::where('ilc', $ilc)->where('no_ikan', $no_ikan)->value('berat');
+        return response()->json($berat);
+    }
+
     public function getAllCutting(Request $request)
     {
         if ($request->ajax()) {

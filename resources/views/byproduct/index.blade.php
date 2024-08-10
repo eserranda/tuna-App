@@ -147,8 +147,8 @@
                                         <tr>
                                             <th>No</th>
                                             <th>ILC</th>
-                                            <th>Nama</th>
                                             <th>Stage</th>
+                                            <th>Nama</th>
                                             <th>Berat</th>
                                             {{-- <th>Tanggal</th> --}}
                                             <th></th>

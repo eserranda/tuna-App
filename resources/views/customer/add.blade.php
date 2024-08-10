@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    <h4 class="mb-sm-0">Supplier</h4>
+    <h4 class="mb-sm-0">Customer</h4>
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="javascript: void(0);">Customer</a></li>
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-lg-12 mt-2">
                                     <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">Buat Supplier</button>
+                                        <button type="submit" class="btn btn-primary">Buat Customer</button>
                                     </div>
                                 </div>
                             </div>

@@ -165,6 +165,8 @@ Route::prefix('retouching')->controller(RetouchingController::class)->group(func
     Route::get('/getAllCutting', 'getAllCutting')->name('retouching.getAllCutting');
 
     Route::get('/getNoIkan/{ilc_cutting}', 'getNoIkan')->name('retouching.getNoIkan');
+    Route::get('/getBerat/{ilc}/{no_ikan}', 'getBerat');
+
 
     Route::get('/calculateLoin/{ilc_cutting}/{no_ikan}', 'calculateLoin')->name('retouching.calculateLoin');
 })->middleware('auth');

@@ -101,8 +101,8 @@
                                     <div class="row">
                                         <div class="col-6  mb-2">
                                             <label for="berat" class="form-label">Produk</label>
-                                            <input type="text" class="form-control bg-light"
-                                                placeholder="Internal Lot Code" id="produk" readonly>
+                                            <input type="text" class="form-control bg-light" placeholder="Produk"
+                                                id="produk" readonly>
                                             <input type="hidden" class="form-control bg-light" id="id_produk"
                                                 name="id_produk" readonly>
                                             <div class="invalid-feedback">
@@ -119,8 +119,8 @@
                                         </div>
                                         <div class="col-6">
                                             <label for="berat" class="form-label">Berat Produk</label>
-                                            <input type="number" class="form-control" placeholder="Berat" id="berat"
-                                                name="berat">
+                                            <input type="number" class="form-control bg-light" placeholder="Berat"
+                                                id="berat" name="berat" readonly>
                                             <div class="invalid-feedback">
                                             </div>
                                         </div>
@@ -364,6 +364,25 @@
             }
 
             getNoIkan(ilc_cutting);
+        });
+
+        document.getElementById('no_ikan').addEventListener('change', async function(event) {
+            const ilc = "{{ $data->ilc }}";
+            // const no_ikan = event.target.value;
+            try {
+                const response = await fetch('/retouching/getBerat/' + ilc + '/' + event.target.value, {
+                    method: 'GET',
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('berat').value = data;
+            } catch (error) {
+                console.error('Fetch error: ', error);
+                alert('Terjadi kesalahan saat mengambil data.');
+            }
         });
 
         async function print(id_product, ilc) {
