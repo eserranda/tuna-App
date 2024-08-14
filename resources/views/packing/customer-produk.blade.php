@@ -110,7 +110,7 @@
                                 <form id="customerPackingProductForm">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label for="berat" class="form-label">Internal Lot Code</label>
+                                            <label for="ilc" class="form-label">Internal Lot Code</label>
                                             <input type="text" class="form-control bg-light"
                                                 placeholder="Internal Lot Code" id="ilc" name="ilc" readonly>
                                             <div class="invalid-feedback"> </div>
@@ -169,6 +169,34 @@
 
 @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('keydown', function(event) {
+                // Cek apakah tombol yang ditekan adalah "Enter"
+                if (event.key === 'Enter') {
+                    // Ambil value dari input yang di-scan
+                    let scanValue = event.target.value;
+
+                    // Pisahkan kode ILC dan berat
+                    const [ilcCode, berat] = scanValue.split('-');
+
+                    // Validasi format data
+                    if (ilcCode && berat) {
+                        // Masukkan nilai ILC ke dalam input 'ilc'
+                        document.getElementById('ilc').value = ilcCode;
+
+                        // Masukkan nilai berat ke dalam input 'berat'
+                        document.getElementById('berat').value = parseFloat(berat).toFixed(2);
+
+                        // Kosongkan input scanner setelah proses
+                        event.target.value = '';
+
+                        // Cegah aksi default (misalnya, pengiriman form atau perpindahan focus)
+                        event.preventDefault();
+                    }
+                }
+            });
+        });
+
         async function hapus(id) {
             Swal.fire({
                 title: 'Hapus Data?',

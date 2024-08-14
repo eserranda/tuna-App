@@ -22,7 +22,7 @@ class PrinterController extends Controller
         $nama_produk = $getDataProduct->produk->nama;
         $berat = $getDataProduct->berat;
 
-        $join = $ilc . "-" . $id_product;
+        $join = $ilc . "-" . $berat;
 
         $printerName = "p_parkir";
         try {
