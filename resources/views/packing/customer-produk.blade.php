@@ -112,13 +112,13 @@
                                         <div class="col-6">
                                             <label for="ilc" class="form-label">Internal Lot Code</label>
                                             <input type="text" class="form-control bg-light"
-                                                placeholder="Internal Lot Code" id="ilc" name="ilc" readonly>
+                                                placeholder="Internal Lot Code" id="ilc" name="ilc">
                                             <div class="invalid-feedback"> </div>
                                         </div>
                                         <div class="col-6 mb-2">
                                             <label for="berat" class="form-label">Berat (Kg)</label>
                                             <input type="text" class="form-control bg-light" placeholder="Berat"
-                                                id="berat" name="berat" readonly>
+                                                id="berat" name="berat">
                                             <div class="invalid-feedback"> </div>
                                         </div>
 
