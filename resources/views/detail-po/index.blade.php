@@ -117,7 +117,9 @@
                     @endif
 
 
-                    @if ($produk->isNotEmpty())
+                    @if ($produk->isEmpty())
+                        <h5 class="text-center">Tidak ada data</h5>
+                    @else
                         <div class="col-lg-12">
                             <div class="card-body p-4">
                                 <div class="table-responsive">
@@ -146,28 +148,26 @@
                                     </table><!--end table-->
                                 </div>
                                 {{-- <div class="mt-4">
-                                <div class="alert alert-info">
-                                    <p class="mb-0"><span class="fw-semibold">NOTES:</span>
-                                        <span id="note">All accounts are to be paid within 7 days from receipt of
-                                            invoice. To be paid by cheque or
-                                            credit card or direct payment online. If account is not paid within 7
-                                            days the credits details supplied as confirmation of work undertaken
-                                            will be charged the agreed quoted fee noted above.
-                                        </span>
-                                    </p>
-                                </div>
-                            </div> --}}
+                            <div class="alert alert-info">
+                                <p class="mb-0"><span class="fw-semibold">NOTES:</span>
+                                    <span id="note">All accounts are to be paid within 7 days from receipt of
+                                        invoice. To be paid by cheque or
+                                        credit card or direct payment online. If account is not paid within 7
+                                        days the credits details supplied as confirmation of work undertaken
+                                        will be charged the agreed quoted fee noted above.
+                                    </span>
+                                </p>
+                            </div>
+                        </div> --}}
                                 <div class="hstack gap-2 justify-content-end d-print-none mt-4">
                                     <a href="javascript:window.print()" class="btn btn-success"><i
                                             class="ri-printer-line align-bottom me-1"></i> Print</a>
                                     {{-- <a href="javascript:void(0);" class="btn btn-primary"><i
-                                        class="ri-download-2-line align-bottom me-1"></i> Download</a> --}}
+                                    class="ri-download-2-line align-bottom me-1"></i> Download</a> --}}
                                 </div>
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->
-                    @else
-                        <p class="text-center">Data Produk tidak tersedia.</p>
                     @endif
                 </div><!--end row-->
             </div>
