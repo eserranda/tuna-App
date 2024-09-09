@@ -33,18 +33,21 @@
              </div>
              <ul class="navbar-nav" id="navbar-nav">
 
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/dashboard">
-                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
-                     </a>
-                 </li>
-                 @if (auth()->user()->hasAnyRole(['customer']))
+                 @if (auth()->user()->hasAnyRole(['super_admin']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/dashboard">
+                             <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
+                         </a>
+                     </li>
+                 @endif
+
+                 {{-- @if (auth()->user()->hasAnyRole(['customer']))
                      <li class="nav-item">
                          <a class="nav-link menu-link" href="/detail-po">
                              <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Detail PO</span>
                          </a>
                      </li>
-                 @endif
+                 @endif --}}
 
                  <li class="menu-title"><span data-key="t-menu">Processing</span></li>
 
@@ -80,91 +83,102 @@
                      </li>
                  @endif
 
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'receiving']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/byproduct">
+                             <i class="ri-recycle-fill"></i> <span data-key="t-retouching">Byproduct</span>
+                         </a>
+                     </li>
+                 @endif
+
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'qc']))
+                     <li class="menu-title"> <span data-key="t-pages">Chechking</span></li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
+                             aria-expanded="false" aria-controls="users">
+                             <i class="ri-checkbox-line"></i> <span data-key="t-users">Checking</span>
+                         </a>
+                         <div class="collapse menu-dropdown" id="users">
+                             <ul class="nav nav-sm flex-column">
+                                 <li class="nav-item">
+                                     <a href="/receiving-checking" class="nav-link" data-key="t-starter">Receiving
+                                         Checking
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="/cutting-checking" class="nav-link" data-key="t-starter">Cutting
+                                         Checking</a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="/retouching-checking" class="nav-link" data-key="t-starter">Retouching
+                                         Checking</a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="/packing-checking" class="nav-link" data-key="t-starter">Packing
+                                         Checking</a>
+                                 </li>
+                             </ul>
+                         </div>
+                     </li>
+                 @endif
+
+                 @if (auth()->user()->hasAnyRole(['super_admin']))
+                     <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pengaturan</span>
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/supplier">
+                             <i class="ri-group-line"></i> <span data-key="t-supplier">Supplier</span>
+                         </a>
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/customer">
+                             <i class="ri-contacts-line"></i> <span data-key="t-supplier">Customer</span>
+                         </a>
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/produk">
+                             <i class="ri-file-list-2-line"></i> <span data-key="t-supplier">Produk</span>
+                         </a>
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/grades">
+                             <i class=" ri-list-settings-line"></i> <span data-key="t-supplier">Grade</span>
+                         </a>
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
+                             aria-expanded="false" aria-controls="users">
+                             <i class="ri-pages-line"></i> <span data-key="t-users">Users</span>
+                         </a>
+                         <div class="collapse menu-dropdown" id="users">
+                             <ul class="nav nav-sm flex-column">
+                                 <li class="nav-item">
+                                     <a href="/user-customers" class="nav-link" data-key="t-starter">Data
+                                         Customer</a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="/users" class="nav-link" data-key="t-starter">Data User</a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="/roles" class="nav-link" data-key="t-starter">Role</a>
+                                 </li>
+
+                             </ul>
+                         </div>
+                     </li>
+                 @endif
+
                  <li class="nav-item">
-                     <a class="nav-link menu-link" href="/byproduct">
-                         <i class="ri-recycle-fill"></i> <span data-key="t-retouching">Byproduct</span>
+                     <a class="nav-link menu-link" href="/logout">
+                         <i class=" ri-list-settings-line"></i> <span data-key="t-supplier">Logout</span>
                      </a>
                  </li>
-
-                 <li class="menu-title"> <span data-key="t-pages">Chechking</span></li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="users">
-                         <i class="ri-checkbox-line"></i> <span data-key="t-users">Checking</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="users">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="/receiving-checking" class="nav-link" data-key="t-starter">Receiving
-                                     Checking
-                                 </a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="/cutting-checking" class="nav-link" data-key="t-starter">Cutting
-                                     Checking</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="/retouching-checking" class="nav-link" data-key="t-starter">Retouching
-                                     Checking</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="/packing-checking" class="nav-link" data-key="t-starter">Packing
-                                     Checking</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </li>
-
-                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pengaturan</span>
-                 </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/supplier">
-                         <i class="ri-group-line"></i> <span data-key="t-supplier">Supplier</span>
-                     </a>
-                 </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/customer">
-                         <i class="ri-contacts-line"></i> <span data-key="t-supplier">Customer</span>
-                     </a>
-                 </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/produk">
-                         <i class="ri-file-list-2-line"></i> <span data-key="t-supplier">Produk</span>
-                     </a>
-                 </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/grades">
-                         <i class=" ri-list-settings-line"></i> <span data-key="t-supplier">Grade</span>
-                     </a>
-                 </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
-                         aria-expanded="false" aria-controls="users">
-                         <i class="ri-pages-line"></i> <span data-key="t-users">Users</span>
-                     </a>
-                     <div class="collapse menu-dropdown" id="users">
-                         <ul class="nav nav-sm flex-column">
-                             <li class="nav-item">
-                                 <a href="/user-customers" class="nav-link" data-key="t-starter">Data
-                                     Customer</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="/users" class="nav-link" data-key="t-starter">Data User</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="/roles" class="nav-link" data-key="t-starter">Role</a>
-                             </li>
-
-                         </ul>
-                     </div>
-                 </li>
-
              </ul>
          </div>
          <!-- Sidebar -->
