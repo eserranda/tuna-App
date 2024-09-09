@@ -27,7 +27,6 @@ class PackingController extends Controller
 
         // Ambil role user yang sedang login
         $role = auth()->user()->roles->first();
-        // dd($role->name);
 
         if ($role->name == 'super_admin' || $role->name == 'customer') {
             try {
@@ -38,17 +37,21 @@ class PackingController extends Controller
                 $id_customer = auth()->user()->id_customer;
 
                 // Cari data Packing berdasarkan kode QR
-                $packing = Packing::where('kode_qr', $kode_qr)
-                    // ->where('id_customer', $id_customer)
+                $qr_code = Packing::where('kode_qr', $kode_qr)
                     ->first();
-                // dd($packing->customer->nama);
 
-                if (!$packing) {
+                if (!$qr_code) {
                     return response('Data not found', 404);
                 }
 
                 // Cek apakah id_customer dari user yang login sama dengan id_customer di Packing
-                if ($id_customer == $packing->id_customer) {
+                if ($id_customer == $qr_code->id_customer) {
+
+                    // Cari data Packing berdasarkan kode QR
+                    $packing = Packing::where('kode_qr', $kode_qr)
+                        ->where('id_customer', $id_customer)
+                        ->first();
+
                     // Dekripsi kode jika user memiliki hak akses
                     $kode_po = Crypt::decryptString($packing->kode);
                     $tanggal = Carbon::parse($packing->tanggal)->format('d-m-Y');
@@ -59,10 +62,15 @@ class PackingController extends Controller
                     // Tampilkan data yang didekripsi
                     return view('detail-po.index', compact('kode_po', 'tanggal', 'packing', 'produk'));
                 } else {
+                    $id_customer = auth()->user()->id_customer;
+
                     // Jika id_customer tidak cocok, tampilkan data tanpa mendekripsi kode_po
+                    $packing = Packing::where('id_customer', $id_customer)
+                        ->first();
+
                     $kode_po = $packing->kode;
 
-                    $produk = CustomerProduct::where('id_customer', $packing->id_customer)->get();
+                    $produk = CustomerProduct::where('id_customer', $id_customer)->get();
 
                     $packing = Packing::where('kode_qr', $kode_qr)
                         ->where('id_customer', $id_customer)
