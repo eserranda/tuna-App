@@ -38,38 +38,47 @@
                          <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                      </a>
                  </li>
-
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/detail-po">
-                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Detail PO</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->hasAnyRole(['customer']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/detail-po">
+                             <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Detail PO</span>
+                         </a>
+                     </li>
+                 @endif
 
                  <li class="menu-title"><span data-key="t-menu">Processing</span></li>
 
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/receiving">
-                         <i class="ri-share-forward-2-line"></i> <span data-key="t-receiving">Receiving</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'receiving']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/receiving">
+                             <i class="ri-share-forward-2-line"></i> <span data-key="t-receiving">Receiving</span>
+                         </a>
+                     </li>
+                 @endif
 
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/cutting">
-                         <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'cutting']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/cutting">
+                             <i class="ri-knife-blood-line"></i> <span data-key="t-cutting">Cutting</span>
+                         </a>
+                     </li>
+                 @endif
 
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/retouching">
-                         <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Retouching</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'retouching']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/retouching">
+                             <i class="ri-dashboard-line"></i> <span data-key="t-retouching">Retouching</span>
+                         </a>
+                     </li>
+                 @endif
 
-                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="/packing">
-                         <i class=" ri-inbox-archive-fill"></i> <span data-key="t-retouching">Packing</span>
-                     </a>
-                 </li>
+                 @if (auth()->user()->hasAnyRole(['super_admin', 'packing']))
+                     <li class="nav-item">
+                         <a class="nav-link menu-link" href="/packing">
+                             <i class=" ri-inbox-archive-fill"></i> <span data-key="t-retouching">Packing</span>
+                         </a>
+                     </li>
+                 @endif
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/byproduct">
@@ -92,7 +101,8 @@
                                  </a>
                              </li>
                              <li class="nav-item">
-                                 <a href="/cutting-checking" class="nav-link" data-key="t-starter">Cutting Checking</a>
+                                 <a href="/cutting-checking" class="nav-link" data-key="t-starter">Cutting
+                                     Checking</a>
                              </li>
                              <li class="nav-item">
                                  <a href="/retouching-checking" class="nav-link" data-key="t-starter">Retouching
@@ -106,7 +116,8 @@
                      </div>
                  </li>
 
-                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pengaturan</span></li>
+                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Pengaturan</span>
+                 </li>
 
                  <li class="nav-item">
                      <a class="nav-link menu-link" href="/supplier">
@@ -140,7 +151,8 @@
                      <div class="collapse menu-dropdown" id="users">
                          <ul class="nav nav-sm flex-column">
                              <li class="nav-item">
-                                 <a href="/user-customers" class="nav-link" data-key="t-starter">Data Customer</a>
+                                 <a href="/user-customers" class="nav-link" data-key="t-starter">Data
+                                     Customer</a>
                              </li>
                              <li class="nav-item">
                                  <a href="/users" class="nav-link" data-key="t-starter">Data User</a>

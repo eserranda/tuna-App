@@ -22,7 +22,7 @@ class PackingController extends Controller
     {
         // Cek apakah user sudah login
         if (!auth()->check()) {
-            return response('Unauthorized', 401);
+            return redirect()->route('login');
         }
 
         // Ambil role user yang sedang login
