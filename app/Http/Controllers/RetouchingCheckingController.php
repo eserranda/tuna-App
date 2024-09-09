@@ -89,9 +89,8 @@ class RetouchingCheckingController extends Controller
     public function update(Request $request, RetouchingChecking $retouchingChecking)
     {
         $validator = Validator::make($request->all(), [
-            'ilc' => 'required',
-            'uji_lab' => 'required|numeric|min:0|max:4',
             'penampakan' => 'required|numeric|min:0|max:4',
+            'uji_lab' => 'required|numeric|min:0|max:4',
             'tekstur' => 'required|numeric|min:0|max:4',
             'bau' => 'required|numeric|min:0|max:4',
             'es' => 'required|numeric|min:0|max:4',
@@ -99,6 +98,8 @@ class RetouchingCheckingController extends Controller
         ], [
             'required' => 'Nilai :attribute harus diisi.',
         ]);
+
+        // dd(request()->all());
 
         // Cek jika validasi gagal
         if ($validator->fails()) {
@@ -111,16 +112,19 @@ class RetouchingCheckingController extends Controller
         // Ambil nilai yang sudah tervalidasi
         $validatedData = $validator->validated();
 
+        // dd(count($validatedData));
+        // dd(array_sum($validatedData));
         // Hitung rata-rata nilai aktual (X)
         $averageX = array_sum($validatedData) / count($validatedData);
 
         // Hitung nilai kesesuaian (hasil) dalam persentase dan bulatkan
         $nilaiKesesuaian = round(($averageX / 4) * 100, 0);
+        // dd($nilaiKesesuaian);
 
         $updateReceivingChecking = RetouchingChecking::where('id', $request->id)->update([
             'ilc' => $request->ilc,
-            'uji_lab' => $request->uji_lab,
             'penampakan' => $request->penampakan,
+            'uji_lab' => $request->uji_lab,
             'tekstur' => $request->tekstur,
             'bau' => $request->bau,
             'es' => $request->es,
