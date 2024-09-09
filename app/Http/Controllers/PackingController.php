@@ -70,7 +70,7 @@ class PackingController extends Controller
 
                     $kode_po = $packing->kode;
 
-                    $produk = CustomerProduct::where('id_customer', $id_customer)->get();
+                    $produk = CustomerProduct::where('checking', $id_customer)->get();
 
                     $packing = Packing::where('kode_qr', $kode_qr)
                         ->where('id_customer', $id_customer)
