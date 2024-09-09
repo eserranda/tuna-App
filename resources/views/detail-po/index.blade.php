@@ -114,8 +114,6 @@
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->
-                    @else
-                        <p class="text-center">No Data</p>
                     @endif
 
 
@@ -169,7 +167,7 @@
                             <!--end card-body-->
                         </div><!--end col-->
                     @else
-                        <p class="text-center">Produk tidak tersedia.</p>
+                        <p class="text-center">Data Produk tidak tersedia.</p>
                     @endif
                 </div><!--end row-->
             </div>

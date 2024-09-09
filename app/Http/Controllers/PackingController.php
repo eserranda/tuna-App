@@ -39,7 +39,7 @@ class PackingController extends Controller
 
                 // Cari data Packing berdasarkan kode QR
                 $packing = Packing::where('kode_qr', $kode_qr)
-                    ->where('id_customer', $id_customer)
+                    // ->where('id_customer', $id_customer)
                     ->first();
                 // dd($packing->customer->nama);
 
@@ -64,6 +64,9 @@ class PackingController extends Controller
 
                     $produk = CustomerProduct::where('id_customer', $packing->id_customer)->get();
 
+                    $packing = Packing::where('kode_qr', $kode_qr)
+                        ->where('id_customer', $id_customer)
+                        ->first();
 
                     return view('detail-po.index', compact('kode_po', 'packing', 'produk'));
                 }
