@@ -38,7 +38,9 @@ class PackingController extends Controller
                 $id_customer = auth()->user()->id_customer;
 
                 // Cari data Packing berdasarkan kode QR
-                $packing = Packing::where('kode_qr', $kode_qr)->first();
+                $packing = Packing::where('kode_qr', $kode_qr)
+                    ->where('id_customer', $id_customer)
+                    ->first();
                 // dd($packing->customer->nama);
 
                 if (!$packing) {
