@@ -65,7 +65,7 @@ class PrinterController extends Controller
         $produk = $getDataProduct->produk->nama;
         $qr_code = $getDataProduct->kode_qr;
 
-        $data_qr_code = 'http://172.20.10.4:8000/packing/kode-po?kode=' . $qr_code;
+        $data_qr_code = 'http://192.168.195.65:8000/packing/kode-po?kode=' . $qr_code;
 
         $printerName = "p_parkir";
         try {
