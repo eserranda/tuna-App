@@ -13,6 +13,7 @@ class Packing extends Model
         'id_produk',
         'tanggal',
         'kode',
+        'kode_qr'
     ];
 
     public function customer()

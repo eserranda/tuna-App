@@ -39,6 +39,12 @@
                      </a>
                  </li>
 
+                 <li class="nav-item">
+                     <a class="nav-link menu-link" href="/detail-po">
+                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Detail PO</span>
+                     </a>
+                 </li>
+
                  <li class="menu-title"><span data-key="t-menu">Processing</span></li>
 
                  <li class="nav-item">
@@ -133,6 +139,9 @@
                      </a>
                      <div class="collapse menu-dropdown" id="users">
                          <ul class="nav nav-sm flex-column">
+                             <li class="nav-item">
+                                 <a href="/user-customers" class="nav-link" data-key="t-starter">Data Customer</a>
+                             </li>
                              <li class="nav-item">
                                  <a href="/users" class="nav-link" data-key="t-starter">Data User</a>
                              </li>

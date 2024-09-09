@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Cutting;
-use App\Models\Packing;
-use App\Models\ReceivingChecking;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -25,6 +22,7 @@ use App\Http\Controllers\RawMaterialLotsController;
 use App\Http\Controllers\ReceivingCheckingController;
 use App\Http\Controllers\RetouchingCheckingController;
 use App\Http\Controllers\RefinedMaterialLotsController;
+use App\Http\Controllers\UserCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +57,14 @@ Route::prefix('byproduct')->controller(ByproductController::class)->group(functi
     // Route::get('/getAllDataProductLog', 'getAllDataProductLog')->name('get-all-product-log');
 })->middleware('auth');
 
+Route::prefix('user-customers')->controller(UserCustomerController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::post('/register', 'register');
+    // Route::get('/findById/{id}', 'findById');
+    // Route::post('/update', 'update');
+    // Route::delete('/destroy/{id}', 'destroy');
+})->middleware('auth');
+
 Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name('users.index');
     Route::post('/register', 'register');
@@ -83,6 +89,10 @@ Route::prefix('customer-product')->controller(CustomerProductController::class)-
 
 
 Route::prefix('packing')->controller(PackingController::class)->group(function () {
+
+    // Users costumer enkripsi 
+    Route::get('/kode-po', 'processQRCode')->name('process-qr-code');
+
     Route::get('/', 'index')->name('packing.index');
     Route::post('/store', 'store');
     Route::post('/update', 'update');

@@ -26,7 +26,7 @@
 <!--end back-to-top-->
 
 <!--preloader-->
-<div id="preloader">
+{{-- <div id="preloader">
     <div id="status">
         <div class="spinner-border text-primary avatar-sm" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -747,7 +747,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- JAVASCRIPT -->
 <script src="{{ asset('assets') }}/libs/bootstrap/js/bootstrap.bundle.min.js"></script>

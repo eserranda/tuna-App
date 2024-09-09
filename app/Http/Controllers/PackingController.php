@@ -3,13 +3,98 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Packing;
+use App\Models\Customers;
 use App\Models\ProductLog;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\CustomerProduct;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PackingController extends Controller
 {
+
+    public function processQRCode(Request $request)
+    {
+        // Cek apakah user sudah login
+        if (!auth()->check()) {
+            return response('Unauthorized', 401);
+        }
+
+        // Ambil role user yang sedang login
+        $role = auth()->user()->roles->first();
+        // dd($role->name);
+
+        if ($role->name == 'super_admin' || $role->name == 'customer') {
+            try {
+                // Ambil kode QR dari query string
+                $kode_qr = $request->query('kode');
+
+                // Ambil id_customer dari user yang sedang login
+                $id_customer = auth()->user()->id_customer;
+
+                // Cari data Packing berdasarkan kode QR
+                $packing = Packing::where('kode_qr', $kode_qr)->first();
+                // dd($packing->customer->nama);
+
+                if (!$packing) {
+                    return response('Data not found', 404);
+                }
+
+                // Cek apakah id_customer dari user yang login sama dengan id_customer di Packing
+                if ($id_customer == $packing->id_customer) {
+                    // Dekripsi kode jika user memiliki hak akses
+                    $kode_po = Crypt::decryptString($packing->kode);
+                    $tanggal = Carbon::parse($packing->tanggal)->format('d-m-Y');
+
+                    // Dapatkan produk terkait customer
+                    $produk = CustomerProduct::where('id_customer', $id_customer)->get();
+
+                    // Tampilkan data yang didekripsi
+                    return view('detail-po.index', compact('kode_po', 'tanggal', 'packing', 'produk'));
+                } else {
+                    // Jika id_customer tidak cocok, tampilkan data tanpa mendekripsi kode_po
+                    $kode_po = $packing->kode;
+
+                    $produk = CustomerProduct::where('id_customer', $packing->id_customer)->get();
+
+
+                    return view('detail-po.index', compact('kode_po', 'packing', 'produk'));
+                }
+            } catch (DecryptException $e) {
+                // Jika terjadi kesalahan saat mendekripsi kode
+                return response('Invalid QR Code', 400);
+            }
+        } else {
+            abort(403, 'Unauthorized');
+        }
+    }
+
+
+    // try {
+    //     $kode_qr = $request->query('kode');
+
+    //     $packing = Packing::where('kode_qr', $kode_qr)->first();
+    //     $decryptedKode = Crypt::decryptString($packing->kode);
+
+    //     $id_customer = Crypt::encryptString($packing->id_customer);
+    //     $id_produk = Crypt::encryptString($packing->id_produk);
+
+    //     if (!$packing) {
+    //         return response('Data not found', 404);
+    //     }
+
+    //     // Jika ditemukan, kembalikan data packing
+    //     return view('detail-po.index', compact('id_customer', 'id_produk', 'decryptedKode', 'packing'));
+    //     // return view('detail-po.index', ['kode' => $decryptedKode, 'packing' => $packing]);
+    // } catch (DecryptException $e) {
+    //     return response('Invalid QR Code', 400);
+    // }
+
     public function index()
     {
         return view('packing.index');
@@ -57,7 +142,9 @@ class PackingController extends Controller
             ->where('id_produk', $id_produk)
             ->first();
 
-        return view('packing.customer-produk', compact('data'));
+        $kode = Crypt::decryptString($data->kode);
+
+        return view('packing.customer-produk',  compact('data', 'kode'));
     }
 
     public function store(Request $request)
@@ -90,7 +177,16 @@ class PackingController extends Controller
             ], 422);
         }
 
-        $save = Packing::create($request->all());
+        $save = Packing::create(
+            [
+                'id_customer' => $request->id_customer,
+                'id_produk' => $request->id_produk,
+                'tanggal' => $request->tanggal,
+                'kode' => Crypt::encryptString($request->kode), // Simpan kode terenkripsi
+                'kode_qr' => Str::uuid(), // Simpan UUID atau bisa juga gunakan hash pendek
+            ]
+        );
+
         if ($save) {
             return response()->json([
                 'success' => true

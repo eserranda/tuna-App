@@ -76,7 +76,7 @@
                                         Tanggal : <span class="fw-bold"> {{ $data->tanggal }}</span>
                                     </div>
                                     <div class="col-sm-6">
-                                        Kode : <span class="fw-bold">{{ $data->kode }}</span>
+                                        Kode : <span class="fw-bold">{{ $kode }}</span>
                                     </div>
                                 </div>
                             </div>

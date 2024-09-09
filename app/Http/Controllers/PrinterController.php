@@ -58,11 +58,14 @@ class PrinterController extends Controller
     {
         $getDataProduct = Packing::where('id_customer', $id_customer)
             ->where('id_produk', $id_product)
-            ->where('kode', $kode)
+            // ->where('kode', $kode)
             ->first();
 
         $customer = $getDataProduct->customer->nama;
         $produk = $getDataProduct->produk->nama;
+        $qr_code = $getDataProduct->kode_qr;
+
+        $data_qr_code = 'http://172.20.10.4:8000/packing/kode-po?kode=' . $qr_code;
 
         $printerName = "p_parkir";
         try {
@@ -74,11 +77,10 @@ class PrinterController extends Controller
             $printer->text("\n");
             $printer->text($customer);
             $printer->text("\n");
-            $sizes = 10;
-            $printer->qrCode($kode, Printer::QR_ECLEVEL_L, $sizes);
+            $sizes = 8;
+            $printer->qrCode($data_qr_code, Printer::QR_ECLEVEL_L, $sizes);
             $printer->text(" \n");
             $printer->text($produk . "\n");
-            // $printer->text("Berat: " . $berat . " Kg");
 
             $printer->setJustification();
             $printer->feed();
